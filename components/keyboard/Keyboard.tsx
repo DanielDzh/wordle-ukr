@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { Key } from './Key';
 import { keyboardStyles } from './Keyboard.styles';
+import type { LetterState } from '../../types/game';
 
 const ROWS = [
   ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х'],
@@ -10,9 +11,10 @@ const ROWS = [
 
 type KeyboardProps = {
   onKeyPress: (key: string) => void;
+  letterStates?: Record<string, LetterState>;
 };
 
-export function Keyboard({ onKeyPress }: KeyboardProps) {
+export function Keyboard({ onKeyPress, letterStates = {} }: KeyboardProps) {
   return (
     <View className={keyboardStyles.container}>
       {ROWS.map((row, rowIndex) => (
@@ -23,6 +25,7 @@ export function Keyboard({ onKeyPress }: KeyboardProps) {
               label={label}
               onPress={() => onKeyPress(label)}
               wide={label === 'ENTER' || label === 'DELETE'}
+              state={letterStates[label]}
             />
           ))}
         </View>

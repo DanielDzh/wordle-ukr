@@ -1,0 +1,16 @@
+export const resultModalStyles = {
+  backdrop: 'flex-1 items-center justify-center bg-black/50',
+  card: 'w-11/12 max-w-sm rounded-lg bg-white p-6',
+  headline: 'text-2xl font-bold text-center mb-4',
+  statsRow: 'flex-row justify-between mb-4',
+  statItem: 'items-center',
+  statValue: 'text-2xl font-bold',
+  statLabel: 'text-xs text-gray-500',
+  distribution: 'mb-4',
+  distributionRow: 'flex-row items-center mb-1',
+  distributionLabel: 'w-4 text-xs',
+  distributionBar: 'bg-green-600 justify-end px-1 min-h-[18px]',
+  distributionCount: 'text-white text-xs font-semibold',
+  shareButton: 'bg-green-600 rounded py-3 items-center',
+  shareButtonText: 'text-white font-bold',
+};

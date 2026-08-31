@@ -1,6 +1,12 @@
 export const keyStyles = {
-  base: 'h-12 rounded bg-gray-300 items-center justify-center px-1',
-  wide: 'flex-[1.5]',
+  base: 'h-12 rounded items-center justify-center px-1',
+  wide: 'flex-[2.2]',
   narrow: 'flex-1',
-  text: 'text-sm font-semibold text-black',
+  text: 'text-xs font-semibold',
+  states: {
+    default: { bg: 'bg-gray-300', text: 'text-black' },
+    correct: { bg: 'bg-green-600', text: 'text-white' },
+    present: { bg: 'bg-yellow-500', text: 'text-white' },
+    absent: { bg: 'bg-gray-500', text: 'text-white' },
+  },
 };
