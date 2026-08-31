@@ -2,6 +2,7 @@ import { useEffect, useReducer, useState } from 'react';
 import { WORDS } from '../data/words';
 import { getTodayWord } from '../lib/daily-word';
 import { createInitialGameState, gameReducer } from '../lib/game-reducer';
+import { hapticError, hapticSuccess } from '../lib/haptics';
 import { mergeLetterStates } from '../lib/keyboard-letter-states';
 import { createInitialStats, updateStats } from '../lib/stats';
 import { loadDailyGame, loadStats, saveDailyGame, saveStats } from '../lib/storage';
@@ -48,6 +49,11 @@ export function useGameState() {
     setStats(next);
     saveStats(next);
     setStatsRecorded(true);
+    if (won) {
+      hapticSuccess();
+    } else {
+      hapticError();
+    }
     // stats is intentionally omitted from deps: this effect must run exactly once per
     // status transition away from 'playing', not re-run when setStats updates `stats`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
