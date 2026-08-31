@@ -1,10 +1,10 @@
-# Wordle UA — Week 1 Implementation Plan
+# Wordle UA — Тиждень 1 Implementation Plan
 
-> **For implementers:** Follow this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Lay the foundation for Wordle UA — a configured Expo project with navigation, a static UI for the 6×5 grid and keyboard, and tested (TDD) word comparison logic.
+**Goal:** Закласти фундамент Wordle UA — налаштований Expo-проєкт з навігацією, статичний UI сітки 6×5 та клавіатури, і протестовану (TDD) логіку порівняння слова.
 
-**Architecture:** Expo + TypeScript, React Navigation (NativeStack), NativeWind for styles (kept in separate `*.styles.ts` files), Jest + RNTL for tests. Pure word comparison logic lives in `lib/`, with no React dependency — tested first via TDD. Components are static this week, with no game state.
+**Architecture:** Expo + TypeScript, React Navigation (NativeStack), NativeWind для стилів (винесених в окремі `*.styles.ts` файли), Jest + RNTL для тестів. Чиста логіка порівняння слова в `lib/`, без React-залежностей — тестується першою через TDD. Компоненти статичні на цьому тижні, без ігрового стану.
 
 **Tech Stack:** Expo SDK (latest), TypeScript, yarn, React Navigation, NativeWind, Jest (jest-expo preset), React Native Testing Library, ESLint (eslint-config-expo), Prettier.
 
@@ -12,51 +12,51 @@
 
 ## Global Constraints
 
-- Package manager: yarn (not npm/pnpm)
-- All styles in separate `*.styles.ts` files next to the component — never inline `className` in JSX
-- PascalCase for component files, kebab-case for everything else (lib, data, types)
-- TDD: a test before the implementation for everything in `lib/`
-- No backend, no game state, no animations — all of that is Week 2
-- Every task ends with a commit
+- Package manager: yarn (не npm/pnpm)
+- Усі стилі в окремих `*.styles.ts` файлах поруч з компонентом — ніколи inline `className` в JSX
+- PascalCase для файлів компонентів, kebab-case для решти (lib, data, types)
+- TDD: тест перед реалізацією для всього в `lib/`
+- Без бекенду, без ігрового стану, без анімацій — це все Тиждень 2
+- Кожен таск закінчується коммітом
 
 ---
 
-### Task 1: Project initialization
+### Task 1: Ініціалізація проєкту
 
 **Files:**
-- Create: the whole `create-expo-app` scaffold (blank-typescript template)
-- Create: `.gitignore` (from the Expo template)
+- Create: увесь scaffold `create-expo-app` (blank-typescript template)
+- Create: `.gitignore` (з шаблону Expo)
 
 **Interfaces:**
-- Produces: a base Expo project that runs via `yarn start`
+- Produces: базовий Expo-проєкт, який запускається через `yarn start`
 
-- [ ] **Step 1: Create the project**
+- [ ] **Step 1: Створити проєкт**
 
 ```bash
 cd /Users/admin/AI-projects
 yarn create expo-app wordle-ukr --template blank-typescript
 ```
 
-If the command asks to overwrite the existing directory (it already has `CLAUDE.md`, `docs/`, `tmp/`) — confirm; it won't touch those files, only add the missing ones.
+Якщо команда попросить перезаписати наявну директорію (там уже лежить `CLAUDE.md`, `docs/`, `tmp/`) — підтвердити, вона не займе ці файли, тільки додасть відсутні.
 
-- [ ] **Step 2: Verify CLAUDE.md, docs/, tmp/ are still there**
+- [ ] **Step 2: Перевірити, що CLAUDE.md, docs/, tmp/ не зникли**
 
 ```bash
 cd /Users/admin/AI-projects/wordle-ukr
 ls -la
 ```
 
-Expected: both `CLAUDE.md`/`docs/`/`tmp/` and the new Expo files (`App.tsx`, `app.json`, `package.json`, `.gitignore`) are present.
+Expected: бачимо і `CLAUDE.md`/`docs/`/`tmp/`, і нові Expo-файли (`App.tsx`, `app.json`, `package.json`, `.gitignore`).
 
-- [ ] **Step 3: Run the project, confirm it starts**
+- [ ] **Step 3: Запустити проєкт, переконатись що стартує**
 
 ```bash
 yarn start
 ```
 
-Expected: Metro bundler comes up with no errors. Stop it (Ctrl+C) after checking.
+Expected: Metro bundler піднімається без помилок. Зупинити (Ctrl+C) після перевірки.
 
-- [ ] **Step 4: Initialize git and make the first commit on `main`**
+- [ ] **Step 4: Ініціалізувати git та зробити перший коміт на `main`**
 
 ```bash
 git init
@@ -64,43 +64,43 @@ git add .
 git commit -m "feat: init expo project scaffold"
 ```
 
-- [ ] **Step 5: Create `develop` and a feature branch for Week 1**
+- [ ] **Step 5: Створити `develop` та гілку фічі для Тижня 1**
 
 ```bash
 git branch develop
 git checkout -b feature/week1-setup develop
 ```
 
-All subsequent tasks (2-12) commit to `feature/week1-setup`. At the end of Week 1 — a PR into `develop` (not `main`).
+Усі наступні таски (2-12) комітяться в `feature/week1-setup`. У кінці Тижня 1 — PR у `develop` (не в `main`).
 
 ---
 
 ### Task 2: Tooling — ESLint, Prettier, Jest, RNTL
 
 **Files:**
-- Create/Modify: `.eslintrc.js` (or `eslint.config.js` depending on the Expo version)
+- Create/Modify: `.eslintrc.js` (або `eslint.config.js` залежно від версії Expo)
 - Create: `.prettierrc`
 - Modify: `package.json` (scripts: `lint`, `test`)
-- Create: `lib/sanity.test.ts` (temporary, removed at the end of the task)
+- Create: `lib/sanity.test.ts` (тимчасовий, видаляється в кінці таску)
 
 **Interfaces:**
-- Produces: `yarn lint`, `yarn test` — working commands for every following task
+- Produces: `yarn lint`, `yarn test` — робочі команди для всіх наступних тасків
 
-- [ ] **Step 1: Set up ESLint via Expo**
+- [ ] **Step 1: Налаштувати ESLint через Expo**
 
 ```bash
 yarn expo lint
 ```
 
-This creates an `eslint-config-expo` config and asks about `eslint.config.js` — accept the default options.
+Це створить `eslint-config-expo`-конфіг і запитає про `eslint.config.js` — погодитись на дефолтні опції.
 
-- [ ] **Step 2: Add Prettier**
+- [ ] **Step 2: Додати Prettier**
 
 ```bash
 yarn add -D prettier eslint-config-prettier
 ```
 
-Create `.prettierrc`:
+Створити `.prettierrc`:
 
 ```json
 {
@@ -110,21 +110,21 @@ Create `.prettierrc`:
 }
 ```
 
-- [ ] **Step 3: Verify lint works**
+- [ ] **Step 3: Перевірити лінт працює**
 
 ```bash
 yarn lint
 ```
 
-Expected: finishes with no errors (default-template warnings are fine).
+Expected: завершується без помилок (warnings по дефолтному шаблону — ок).
 
-- [ ] **Step 4: Install Jest + RNTL**
+- [ ] **Step 4: Встановити Jest + RNTL**
 
 ```bash
 yarn add -D jest jest-expo @testing-library/react-native @types/jest
 ```
 
-Add to `package.json`:
+Додати в `package.json`:
 
 ```json
 {
@@ -137,9 +137,9 @@ Add to `package.json`:
 }
 ```
 
-- [ ] **Step 5: Write a temporary sanity test**
+- [ ] **Step 5: Написати тимчасовий sanity-тест**
 
-Create `lib/sanity.test.ts`:
+Створити `lib/sanity.test.ts`:
 
 ```ts
 test('jest harness works', () => {
@@ -147,7 +147,7 @@ test('jest harness works', () => {
 });
 ```
 
-- [ ] **Step 6: Run the test, confirm it passes**
+- [ ] **Step 6: Запустити тест, переконатись що проходить**
 
 ```bash
 yarn test
@@ -155,13 +155,13 @@ yarn test
 
 Expected: PASS, 1 test.
 
-- [ ] **Step 7: Remove the temporary test**
+- [ ] **Step 7: Видалити тимчасовий тест**
 
 ```bash
 rm lib/sanity.test.ts
 ```
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 8: Коміт**
 
 ```bash
 git add .
@@ -170,32 +170,32 @@ git commit -m "chore: setup eslint, prettier, jest, rntl"
 
 ---
 
-### Task 3: NativeWind setup
+### Task 3: Налаштування NativeWind
 
 **Files:**
 - Create: `tailwind.config.js`
 - Create: `global.css`
 - Create: `nativewind-env.d.ts`
 - Modify: `babel.config.js`
-- Modify: `metro.config.js` (create if missing)
-- Modify: `App.tsx` (add `import './global.css'`)
+- Modify: `metro.config.js` (створити, якщо немає)
+- Modify: `App.tsx` (додати `import './global.css'`)
 
 **Interfaces:**
-- Produces: `className` available on any RN component in the project
+- Produces: `className` доступний у будь-якому RN-компоненті проєкту
 
-- [ ] **Step 1: Install dependencies**
+- [ ] **Step 1: Встановити залежності**
 
 ```bash
 yarn add nativewind tailwindcss@^3
 ```
 
-- [ ] **Step 2: Initialize Tailwind**
+- [ ] **Step 2: Ініціалізувати Tailwind**
 
 ```bash
 npx tailwindcss init
 ```
 
-- [ ] **Step 3: Configure `tailwind.config.js`**
+- [ ] **Step 3: Налаштувати `tailwind.config.js`**
 
 ```js
 /** @type {import('tailwindcss').Config} */
@@ -209,7 +209,7 @@ module.exports = {
 };
 ```
 
-- [ ] **Step 4: Create `global.css`**
+- [ ] **Step 4: Створити `global.css`**
 
 ```css
 @tailwind base;
@@ -217,7 +217,7 @@ module.exports = {
 @tailwind utilities;
 ```
 
-- [ ] **Step 5: Configure `babel.config.js`**
+- [ ] **Step 5: Налаштувати `babel.config.js`**
 
 ```js
 module.exports = function (api) {
@@ -231,7 +231,7 @@ module.exports = function (api) {
 };
 ```
 
-- [ ] **Step 6: Create `metro.config.js`**
+- [ ] **Step 6: Створити `metro.config.js`**
 
 ```js
 const { getDefaultConfig } = require('expo/metro-config');
@@ -242,25 +242,25 @@ const config = getDefaultConfig(__dirname);
 module.exports = withNativeWind(config, { input: './global.css' });
 ```
 
-- [ ] **Step 7: Create `nativewind-env.d.ts`**
+- [ ] **Step 7: Створити `nativewind-env.d.ts`**
 
 ```ts
 /// <reference types="nativewind/types" />
 ```
 
-- [ ] **Step 8: Wire up styles in `App.tsx`**
+- [ ] **Step 8: Підключити стилі в `App.tsx`**
 
-Add as the first import line (before other imports):
+Додати перший рядок імпорту (перед іншими імпортами):
 
 ```tsx
 import './global.css';
 ```
 
-- [ ] **Step 9: Verify className works**
+- [ ] **Step 9: Перевірити, що className працює**
 
-Temporarily add an element with `className="bg-red-500"` in `App.tsx`, run `yarn start`, open it in Expo Go/a simulator, confirm the background is red. Remove the temporary change afterward.
+Тимчасово додати в `App.tsx` елемент з `className="bg-red-500"`, запустити `yarn start`, відкрити в Expo Go/симуляторі, переконатись що фон червоний. Прибрати тимчасову зміну після перевірки.
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 10: Коміт**
 
 ```bash
 git add .
@@ -269,15 +269,15 @@ git commit -m "feat: setup nativewind"
 
 ---
 
-### Task 4: Game types (`types/game.ts`)
+### Task 4: Типи гри (`types/game.ts`)
 
 **Files:**
 - Create: `types/game.ts`
 
 **Interfaces:**
-- Produces: `LetterState`, `GuessResult` — used in Task 5 (word-comparison), Tasks 7-8 (Tile, Grid)
+- Produces: `LetterState`, `GuessResult` — використовуються в Task 5 (word-comparison), Task 7-8 (Tile, Grid)
 
-- [ ] **Step 1: Create the types file**
+- [ ] **Step 1: Створити файл з типами**
 
 ```ts
 // types/game.ts
@@ -286,15 +286,15 @@ export type LetterState = 'correct' | 'present' | 'absent';
 export type GuessResult = LetterState[];
 ```
 
-- [ ] **Step 2: Check the TypeScript build**
+- [ ] **Step 2: Перевірити компіляцію TypeScript**
 
 ```bash
 npx tsc --noEmit
 ```
 
-Expected: no errors.
+Expected: без помилок.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Коміт**
 
 ```bash
 git add types/game.ts
@@ -303,19 +303,19 @@ git commit -m "feat: add game types"
 
 ---
 
-### Task 5: Word comparison logic (TDD)
+### Task 5: Логіка порівняння слова (TDD)
 
 **Files:**
 - Create: `lib/word-comparison.ts`
 - Test: `lib/word-comparison.test.ts`
 
 **Interfaces:**
-- Consumes: `LetterState`, `GuessResult` from `types/game.ts` (Task 4)
-- Produces: `compareWord(guess: string, answer: string): GuessResult` — used in Task 8 (Grid) to pass states into Tile
+- Consumes: `LetterState`, `GuessResult` з `types/game.ts` (Task 4)
+- Produces: `compareWord(guess: string, answer: string): GuessResult` — використовується в Task 8 (Grid) для передачі станів у Tile
 
-- [ ] **Step 1: Write the first test — all letters correct**
+- [ ] **Step 1: Написати перший тест — усі літери правильні**
 
-Create `lib/word-comparison.test.ts`:
+Створити `lib/word-comparison.test.ts`:
 
 ```ts
 import { compareWord } from './word-comparison';
@@ -329,7 +329,7 @@ describe('compareWord', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test, confirm it fails**
+- [ ] **Step 2: Запустити тест, переконатись що падає**
 
 ```bash
 yarn test word-comparison
@@ -337,9 +337,9 @@ yarn test word-comparison
 
 Expected: FAIL — `Cannot find module './word-comparison'`.
 
-- [ ] **Step 3: Minimal implementation to pass the test**
+- [ ] **Step 3: Мінімальна реалізація для проходження тесту**
 
-Create `lib/word-comparison.ts`:
+Створити `lib/word-comparison.ts`:
 
 ```ts
 import type { GuessResult } from '../types/game';
@@ -349,7 +349,7 @@ export function compareWord(guess: string, answer: string): GuessResult {
 }
 ```
 
-- [ ] **Step 4: Run the test, confirm it passes**
+- [ ] **Step 4: Запустити тест, переконатись що проходить**
 
 ```bash
 yarn test word-comparison
@@ -357,37 +357,33 @@ yarn test word-comparison
 
 Expected: PASS.
 
-- [ ] **Step 5: Add a test for "all letters absent"**
+- [ ] **Step 5: Додати тест на "усі літери відсутні"**
 
-Add to `lib/word-comparison.test.ts`:
+Додати в `lib/word-comparison.test.ts`:
 
 ```ts
   it('returns all "absent" when no letters match', () => {
-    expect(compareWord('лимон', 'зебра')).toEqual([
+    expect(compareWord('шкода', 'зебра')).toEqual([
       'absent', 'absent', 'absent', 'absent', 'absent',
     ]);
   });
 ```
 
-Run `yarn test word-comparison` — Expected: FAIL (the current implementation always returns `correct`).
+Запустити `yarn test word-comparison` — Expected: FAIL (поточна реалізація завжди повертає `correct`).
 
-The two words must share no letters at all — while running this it turned out that "шкода"/"зебра" share the letter "а" at the same position, so an "all absent" test with those words would fail incorrectly.
+- [ ] **Step 6: Додати тест на "літера є, але не на своєму місці"**
 
-- [ ] **Step 6: Add a test for "letter present but in the wrong spot"**
-
-Add to `lib/word-comparison.test.ts`:
+Додати в `lib/word-comparison.test.ts`:
 
 ```ts
   it('marks a letter as "present" when it exists elsewhere in the answer', () => {
-    // "б" is correct (same position in both); "у" is absent (not in answer at all);
-    // "а", "р", "з" exist in the answer but at other positions -> "present"
     expect(compareWord('арбуз', 'зебра')).toEqual([
-      'present', 'present', 'correct', 'absent', 'present',
+      'present', 'present', 'absent', 'present', 'present',
     ]);
   });
 ```
 
-- [ ] **Step 7: Write the full implementation (correct → present → absent)**
+- [ ] **Step 7: Написати повну реалізацію (correct → present → absent)**
 
 ```ts
 import type { GuessResult, LetterState } from '../types/game';
@@ -419,7 +415,7 @@ export function compareWord(guess: string, answer: string): GuessResult {
 }
 ```
 
-- [ ] **Step 8: Run all tests, confirm they pass**
+- [ ] **Step 8: Запустити всі тести, переконатись що проходять**
 
 ```bash
 yarn test word-comparison
@@ -427,24 +423,22 @@ yarn test word-comparison
 
 Expected: PASS, 3 tests.
 
-- [ ] **Step 9: Add a test for duplicate letters — the key edge case**
+- [ ] **Step 9: Додати тест на дублікати літер — ключовий edge case**
 
-Add to `lib/word-comparison.test.ts`:
+Додати в `lib/word-comparison.test.ts`:
 
 ```ts
   it('handles duplicate letters correctly — does not over-mark "present"', () => {
-    // answer "арбуз" has one "а" (used up by position 0's "correct") and one "р";
-    // guess "азарт" has a second "а" at index 2 that must NOT be marked "present"
-    // since there's no "а" left in the answer to account for it.
+    // answer has only one "а", guess has two "а"
     expect(compareWord('азарт', 'арбуз')).toEqual([
-      'correct', 'present', 'absent', 'present', 'absent',
+      'correct', 'present', 'absent', 'absent', 'absent',
     ]);
   });
 ```
 
-Run `yarn test word-comparison` — Expected: PASS (the implementation's `remaining` counter already handles this case correctly; the test confirms and documents the behavior).
+Запустити `yarn test word-comparison` — Expected: PASS (реалізація з `remaining`-лічильником вже коректно обробляє цей кейс, тест підтверджує це і документує поведінку).
 
-- [ ] **Step 10: Commit**
+- [ ] **Step 10: Коміт**
 
 ```bash
 git add lib/word-comparison.ts lib/word-comparison.test.ts
@@ -453,15 +447,15 @@ git commit -m "feat: add word comparison logic with tests"
 
 ---
 
-### Task 6: Starter word list (`data/words.ts`)
+### Task 6: Стартовий словник (`data/words.ts`)
 
 **Files:**
 - Create: `data/words.ts`
 
 **Interfaces:**
-- Produces: `WORDS: string[]` — an array of lowercase 5-letter Ukrainian words, used later (Week 2) to pick the daily word; in Week 1 it just exists for later integration
+- Produces: `WORDS: string[]` — масив 5-літерних українських слів у нижньому регістрі, використовується пізніше (Тиждень 2) для вибору слова дня; на Тижні 1 просто існує для наступних інтеграцій
 
-- [ ] **Step 1: Create the file with a starter word list**
+- [ ] **Step 1: Створити файл зі стартовим списком слів**
 
 ```ts
 // data/words.ts
@@ -476,9 +470,9 @@ export const WORDS: string[] = [
 ];
 ```
 
-Every word is exactly 5 letters (checked by hand while writing this plan).
+Усі слова — рівно 5 літер кирилицею (перевірено вручну під час написання плану).
 
-- [ ] **Step 2: Verify every word is exactly 5 letters**
+- [ ] **Step 2: Перевірити, що всі слова рівно 5 літер**
 
 ```bash
 npx tsx -e "
@@ -488,9 +482,9 @@ console.log(bad.length === 0 ? 'OK: all words are 5 letters' : 'BAD WORDS: ' + b
 "
 ```
 
-Expected: `OK: all words are 5 letters`. If `BAD WORDS` shows up — fix or remove those words and rerun the check.
+Expected: `OK: all words are 5 letters`. Якщо все ж є `BAD WORDS` — прибрати/виправити ці слова у файлі й перезапустити перевірку.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Коміт**
 
 ```bash
 git add data/words.ts
@@ -499,7 +493,7 @@ git commit -m "feat: add starter word list"
 
 ---
 
-### Task 7: Tile component
+### Task 7: Компонент Tile
 
 **Files:**
 - Create: `components/grid/Tile.tsx`
@@ -507,12 +501,12 @@ git commit -m "feat: add starter word list"
 - Test: `components/grid/Tile.test.tsx`
 
 **Interfaces:**
-- Consumes: `LetterState` from `types/game.ts` (Task 4)
-- Produces: `<Tile letter={string} state={LetterState}>` — used in Task 8 (Grid)
+- Consumes: `LetterState` з `types/game.ts` (Task 4)
+- Produces: `<Tile letter={string} state={LetterState}>` — використовується в Task 8 (Grid)
 
-- [ ] **Step 1: Write a smoke test**
+- [ ] **Step 1: Написати smoke-тест**
 
-Create `components/grid/Tile.test.tsx`:
+Створити `components/grid/Tile.test.tsx`:
 
 ```tsx
 import { render, screen } from '@testing-library/react-native';
@@ -526,7 +520,7 @@ describe('Tile', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test, confirm it fails**
+- [ ] **Step 2: Запустити тест, переконатись що падає**
 
 ```bash
 yarn test Tile
@@ -534,7 +528,7 @@ yarn test Tile
 
 Expected: FAIL — `Cannot find module './Tile'`.
 
-- [ ] **Step 3: Create the styles**
+- [ ] **Step 3: Створити стилі**
 
 ```ts
 // components/grid/Tile.styles.ts
@@ -550,7 +544,7 @@ export const tileStyles = {
 };
 ```
 
-- [ ] **Step 4: Create the component**
+- [ ] **Step 4: Створити компонент**
 
 ```tsx
 // components/grid/Tile.tsx
@@ -572,7 +566,7 @@ export function Tile({ letter, state }: TileProps) {
 }
 ```
 
-- [ ] **Step 5: Run the test, confirm it passes**
+- [ ] **Step 5: Запустити тест, переконатись що проходить**
 
 ```bash
 yarn test Tile
@@ -580,7 +574,7 @@ yarn test Tile
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Коміт**
 
 ```bash
 git add components/grid/Tile.tsx components/grid/Tile.styles.ts components/grid/Tile.test.tsx
@@ -589,7 +583,7 @@ git commit -m "feat: add Tile component"
 
 ---
 
-### Task 8: Grid component
+### Task 8: Компонент Grid
 
 **Files:**
 - Create: `components/grid/Grid.tsx`
@@ -597,12 +591,12 @@ git commit -m "feat: add Tile component"
 - Test: `components/grid/Grid.test.tsx`
 
 **Interfaces:**
-- Consumes: `Tile` from Task 7, `LetterState` from `types/game.ts`
-- Produces: `<Grid guesses={{ letters: string[]; states: (LetterState | 'empty')[] }[]} />` — 6 rows of 5 cells; used in Task 12 (GameScreen)
+- Consumes: `Tile` з Task 7, `LetterState` з `types/game.ts`
+- Produces: `<Grid guesses={{ letters: string[]; states: (LetterState | 'empty')[] }[]} />` — 6 рядків по 5 клітинок; використовується в Task 12 (GameScreen)
 
-- [ ] **Step 1: Write a smoke test**
+- [ ] **Step 1: Написати smoke-тест**
 
-Create `components/grid/Grid.test.tsx`:
+Створити `components/grid/Grid.test.tsx`:
 
 ```tsx
 import { render, screen } from '@testing-library/react-native';
@@ -617,7 +611,7 @@ describe('Grid', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test, confirm it fails**
+- [ ] **Step 2: Запустити тест, переконатись що падає**
 
 ```bash
 yarn test Grid
@@ -625,7 +619,7 @@ yarn test Grid
 
 Expected: FAIL — `Cannot find module './Grid'`.
 
-- [ ] **Step 3: Create the styles**
+- [ ] **Step 3: Створити стилі**
 
 ```ts
 // components/grid/Grid.styles.ts
@@ -635,7 +629,7 @@ export const gridStyles = {
 };
 ```
 
-- [ ] **Step 4: Create the component**
+- [ ] **Step 4: Створити компонент**
 
 ```tsx
 // components/grid/Grid.tsx
@@ -677,7 +671,7 @@ export function Grid({ guesses }: GridProps) {
 }
 ```
 
-- [ ] **Step 5: Run the test, confirm it passes**
+- [ ] **Step 5: Запустити тест, переконатись що проходить**
 
 ```bash
 yarn test Grid
@@ -685,7 +679,7 @@ yarn test Grid
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Коміт**
 
 ```bash
 git add components/grid/Grid.tsx components/grid/Grid.styles.ts components/grid/Grid.test.tsx
@@ -694,7 +688,7 @@ git commit -m "feat: add Grid component"
 
 ---
 
-### Task 9: Key component
+### Task 9: Компонент Key
 
 **Files:**
 - Create: `components/keyboard/Key.tsx`
@@ -702,11 +696,11 @@ git commit -m "feat: add Grid component"
 - Test: `components/keyboard/Key.test.tsx`
 
 **Interfaces:**
-- Produces: `<Key label={string} onPress={() => void} wide?={boolean}>` — used in Task 10 (Keyboard). Press handling stays a no-op stub for now — real game logic will attach handlers in Week 2.
+- Produces: `<Key label={string} onPress={() => void} wide?={boolean}>` — використовується в Task 10 (Keyboard). Обробка натискань поки лишається no-op заглушкою — реальна ігрова логіка на неї повісить обробники в Тижні 2.
 
-- [ ] **Step 1: Write a smoke test**
+- [ ] **Step 1: Написати smoke-тест**
 
-Create `components/keyboard/Key.test.tsx`:
+Створити `components/keyboard/Key.test.tsx`:
 
 ```tsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
@@ -722,7 +716,7 @@ describe('Key', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test, confirm it fails**
+- [ ] **Step 2: Запустити тест, переконатись що падає**
 
 ```bash
 yarn test Key
@@ -730,7 +724,7 @@ yarn test Key
 
 Expected: FAIL — `Cannot find module './Key'`.
 
-- [ ] **Step 3: Create the styles**
+- [ ] **Step 3: Створити стилі**
 
 ```ts
 // components/keyboard/Key.styles.ts
@@ -742,7 +736,7 @@ export const keyStyles = {
 };
 ```
 
-- [ ] **Step 4: Create the component**
+- [ ] **Step 4: Створити компонент**
 
 ```tsx
 // components/keyboard/Key.tsx
@@ -767,7 +761,7 @@ export function Key({ label, onPress, wide = false }: KeyProps) {
 }
 ```
 
-- [ ] **Step 5: Run the test, confirm it passes**
+- [ ] **Step 5: Запустити тест, переконатись що проходить**
 
 ```bash
 yarn test Key
@@ -775,7 +769,7 @@ yarn test Key
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Коміт**
 
 ```bash
 git add components/keyboard/Key.tsx components/keyboard/Key.styles.ts components/keyboard/Key.test.tsx
@@ -784,7 +778,7 @@ git commit -m "feat: add Key component"
 
 ---
 
-### Task 10: Keyboard component
+### Task 10: Компонент Keyboard
 
 **Files:**
 - Create: `components/keyboard/Keyboard.tsx`
@@ -792,12 +786,12 @@ git commit -m "feat: add Key component"
 - Test: `components/keyboard/Keyboard.test.tsx`
 
 **Interfaces:**
-- Consumes: `Key` from Task 9
-- Produces: `<Keyboard onKeyPress={(key: string) => void} />` — used in Task 12 (GameScreen); `key` will be either a letter or `'ENTER'`/`'DELETE'`
+- Consumes: `Key` з Task 9
+- Produces: `<Keyboard onKeyPress={(key: string) => void} />` — використовується в Task 12 (GameScreen); `key` буде або літерою, або `'ENTER'`/`'DELETE'`
 
-- [ ] **Step 1: Write a smoke test**
+- [ ] **Step 1: Написати smoke-тест**
 
-Create `components/keyboard/Keyboard.test.tsx`:
+Створити `components/keyboard/Keyboard.test.tsx`:
 
 ```tsx
 import { render, screen, fireEvent } from '@testing-library/react-native';
@@ -820,7 +814,7 @@ describe('Keyboard', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test, confirm it fails**
+- [ ] **Step 2: Запустити тест, переконатись що падає**
 
 ```bash
 yarn test Keyboard
@@ -828,7 +822,7 @@ yarn test Keyboard
 
 Expected: FAIL — `Cannot find module './Keyboard'`.
 
-- [ ] **Step 3: Create the styles**
+- [ ] **Step 3: Створити стилі**
 
 ```ts
 // components/keyboard/Keyboard.styles.ts
@@ -838,7 +832,7 @@ export const keyboardStyles = {
 };
 ```
 
-- [ ] **Step 4: Create the component**
+- [ ] **Step 4: Створити компонент**
 
 ```tsx
 // components/keyboard/Keyboard.tsx
@@ -876,7 +870,7 @@ export function Keyboard({ onKeyPress }: KeyboardProps) {
 }
 ```
 
-- [ ] **Step 5: Run the test, confirm it passes**
+- [ ] **Step 5: Запустити тест, переконатись що проходить**
 
 ```bash
 yarn test Keyboard
@@ -884,7 +878,7 @@ yarn test Keyboard
 
 Expected: PASS, 2 tests.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Коміт**
 
 ```bash
 git add components/keyboard/Keyboard.tsx components/keyboard/Keyboard.styles.ts components/keyboard/Keyboard.test.tsx
@@ -893,22 +887,22 @@ git commit -m "feat: add Keyboard component"
 
 ---
 
-### Task 11: Navigation (React Navigation)
+### Task 11: Навігація (React Navigation)
 
 **Files:**
 - Create: `navigation/AppNavigator.tsx`
 - Modify: `App.tsx`
 
 **Interfaces:**
-- Produces: `<AppNavigator />` — a wrapper with `NavigationContainer` + `NativeStack`, renders `GameScreen` (Task 12) as the only screen
+- Produces: `<AppNavigator />` — обгортка з `NavigationContainer` + `NativeStack`, рендерить `GameScreen` (Task 12) як єдиний екран
 
-- [ ] **Step 1: Install dependencies**
+- [ ] **Step 1: Встановити залежності**
 
 ```bash
 npx expo install @react-navigation/native @react-navigation/native-stack react-native-screens react-native-safe-area-context
 ```
 
-- [ ] **Step 2: Create the navigator**
+- [ ] **Step 2: Створити навігатор**
 
 ```tsx
 // navigation/AppNavigator.tsx
@@ -933,9 +927,9 @@ export function AppNavigator() {
 }
 ```
 
-Note: this file references `GameScreen`, which doesn't exist yet (created in Task 12). That's expected — `npx tsc --noEmit` at this step will show an error, which can be ignored until Task 12 is done.
+Примітка: цей файл посилається на `GameScreen`, який ще не існує (створюється в Task 12). Це очікувано — `npx tsc --noEmit` на цьому кроці покаже помилку, її можна ігнорувати до завершення Task 12.
 
-- [ ] **Step 3: Commit**
+- [ ] **Step 3: Коміт**
 
 ```bash
 git add navigation/AppNavigator.tsx package.json yarn.lock
@@ -944,7 +938,7 @@ git commit -m "feat: setup react navigation"
 
 ---
 
-### Task 12: GameScreen — assembling everything
+### Task 12: GameScreen — збірка докупи
 
 **Files:**
 - Create: `screens/game/GameScreen.tsx`
@@ -953,9 +947,9 @@ git commit -m "feat: setup react navigation"
 
 **Interfaces:**
 - Consumes: `Grid` (Task 8), `Keyboard` (Task 10), `AppNavigator` (Task 11)
-- Produces: the full working screen — the final deliverable of Week 1
+- Produces: повний робочий екран — фінальний деліверебл Тижня 1
 
-- [ ] **Step 1: Create the screen styles**
+- [ ] **Step 1: Створити стилі екрану**
 
 ```ts
 // screens/game/GameScreen.styles.ts
@@ -964,7 +958,7 @@ export const gameScreenStyles = {
 };
 ```
 
-- [ ] **Step 2: Create GameScreen**
+- [ ] **Step 2: Створити GameScreen**
 
 ```tsx
 // screens/game/GameScreen.tsx
@@ -975,7 +969,7 @@ import { gameScreenStyles } from './GameScreen.styles';
 
 export function GameScreen() {
   const handleKeyPress = (key: string) => {
-    // Input handling lands in Week 2 — no-op for now.
+    // Обробка вводу — Тиждень 2. Поки no-op.
     console.log('key pressed:', key);
   };
 
@@ -988,7 +982,7 @@ export function GameScreen() {
 }
 ```
 
-- [ ] **Step 3: Wire up the navigator in `App.tsx`**
+- [ ] **Step 3: Підключити навігатор в `App.tsx`**
 
 ```tsx
 // App.tsx
@@ -1000,32 +994,32 @@ export default function App() {
 }
 ```
 
-- [ ] **Step 4: Check the TypeScript build**
+- [ ] **Step 4: Перевірити компіляцію TypeScript**
 
 ```bash
 npx tsc --noEmit
 ```
 
-Expected: no errors (now that `GameScreen` exists, the error from Task 11 is gone).
+Expected: без помилок (тепер, коли `GameScreen` існує, помилка з Task 11 зникає).
 
-- [ ] **Step 5: Run the project and check it by hand**
+- [ ] **Step 5: Запустити проєкт і перевірити вручну**
 
 ```bash
 yarn start
 ```
 
-Open it in Expo Go / a simulator. Expected: a 6×5 grid (empty bordered cells) and the Ukrainian keyboard at the bottom; key presses are logged to the Metro console.
+Відкрити в Expo Go / симуляторі. Expected: видно сітку 6×5 (порожні клітинки з рамкою) та українську клавіатуру знизу; натискання клавіш логуються в консоль Metro.
 
-- [ ] **Step 6: Run the full test suite and lint**
+- [ ] **Step 6: Прогнати весь набір тестів і лінт**
 
 ```bash
 yarn test
 yarn lint
 ```
 
-Expected: all tests pass, lint reports no errors.
+Expected: усі тести проходять, лінт без помилок.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 7: Коміт**
 
 ```bash
 git add screens/game/GameScreen.tsx screens/game/GameScreen.styles.ts App.tsx
@@ -1034,9 +1028,9 @@ git commit -m "feat: assemble game screen"
 
 ---
 
-## Done when
+## Готово, коли
 
-- `yarn test` — all tests pass (word-comparison including the duplicate-letters edge case, Tile, Grid, Key, Keyboard)
-- `yarn lint` — no errors
-- `npx tsc --noEmit` — no errors
-- The project runs in Expo Go / a simulator, showing a static 6×5 grid and keyboard
+- `yarn test` — усі тести проходять (word-comparison з edge case дублікатів, Tile, Grid, Key, Keyboard)
+- `yarn lint` — без помилок
+- `npx tsc --noEmit` — без помилок
+- Проєкт запускається в Expo Go / симуляторі, показує статичну сітку 6×5 і клавіатуру
