@@ -32,12 +32,11 @@ export function Tile({ letter, state, revealDelay = 0 }: TileProps) {
     transform: [{ rotateX: `${rotation.value}deg` }],
   }));
 
+  const colors = tileStyles.states[displayState];
+
   return (
-    <Animated.View
-      style={animatedStyle}
-      className={`${tileStyles.base} ${tileStyles.states[displayState]}`}
-    >
-      <Text className={tileStyles.text}>{letter}</Text>
+    <Animated.View style={animatedStyle} className={`${tileStyles.base} ${colors.bg}`}>
+      <Text className={`${tileStyles.textBase} ${colors.text}`}>{letter}</Text>
     </Animated.View>
   );
 }

@@ -6,4 +6,10 @@ describe('Tile', () => {
     await render(<Tile letter="А" state="correct" />);
     expect(screen.getByText('А')).toBeTruthy();
   });
+
+  it('uses a dark (visible in light mode) text color for an in-progress "empty" tile, not white-on-transparent', async () => {
+    await render(<Tile letter="А" state="empty" />);
+    const text = screen.getByText('А');
+    expect(text.props.className).toContain('text-black');
+  });
 });
