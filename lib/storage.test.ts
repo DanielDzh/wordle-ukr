@@ -3,10 +3,12 @@ import { createInitialGameState } from './game-reducer';
 import {
   loadDailyGame,
   loadOnboardingSeen,
+  loadPracticeRecord,
   loadStats,
   loadThemePreference,
   markOnboardingSeen,
   saveDailyGame,
+  savePracticeRecord,
   saveStats,
   saveThemePreference,
 } from './storage';
@@ -59,5 +61,14 @@ describe('storage', () => {
   it('saves and loads a theme preference', async () => {
     await saveThemePreference('dark');
     expect(await loadThemePreference()).toBe('dark');
+  });
+
+  it('returns 0 for the practice record before one is saved', async () => {
+    expect(await loadPracticeRecord()).toBe(0);
+  });
+
+  it('saves and loads the practice record', async () => {
+    await savePracticeRecord(7);
+    expect(await loadPracticeRecord()).toBe(7);
   });
 });

@@ -14,11 +14,14 @@ type TileProps = {
   letter: string;
   state: LetterState | 'empty';
   revealDelay?: number;
+  /** When set, the tile bounces once after this delay (ms) — used for the winning row. */
+  bounceDelay?: number;
 };
 
-export function Tile({ letter, state, revealDelay = 0 }: TileProps) {
+export function Tile({ letter, state, revealDelay = 0, bounceDelay }: TileProps) {
   const [displayState, setDisplayState] = useState(state);
   const rotation = useSharedValue(0);
+  const translateY = useSharedValue(0);
   const prevState = useRef(state);
 
   useEffect(() => {
@@ -40,8 +43,16 @@ export function Tile({ letter, state, revealDelay = 0 }: TileProps) {
     setDisplayState(state);
   }, [state, revealDelay, rotation]);
 
+  useEffect(() => {
+    if (bounceDelay === undefined) return;
+    translateY.value = withDelay(
+      bounceDelay,
+      withSequence(withTiming(-14, { duration: 120 }), withTiming(0, { duration: 150 })),
+    );
+  }, [bounceDelay, translateY]);
+
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotateX: `${rotation.value}deg` }],
+    transform: [{ rotateX: `${rotation.value}deg` }, { translateY: translateY.value }],
   }));
 
   const colors = tileStyles.states[displayState];

@@ -1,39 +1,13 @@
-import { Share, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ActionBar } from '../../components/keyboard/ActionBar';
-import { Grid } from '../../components/grid/Grid';
-import { Keyboard } from '../../components/keyboard/Keyboard';
-import { ResultModal } from '../../components/modal/ResultModal';
-import { getDayNumber } from '../../lib/daily-word';
-import { buildShareText } from '../../lib/share-text';
-import { useGameState } from '../../hooks/useGameState';
-import { gameScreenStyles } from './GameScreen.styles';
+import { useState } from 'react';
+import { DailyGameView } from './DailyGameView';
+import { PracticeGameView } from './PracticeGameView';
 
 export function GameScreen() {
-  const { state, stats, letterStates, shakeTrigger, handleKeyPress } = useGameState();
-  const isGameOver = state.status !== 'playing';
-  const insets = useSafeAreaInsets();
+  const [mode, setMode] = useState<'daily' | 'practice'>('daily');
 
-  const handleShare = () => {
-    const dayNumber = getDayNumber(new Date());
-    const message = buildShareText(state.guesses, dayNumber, state.status === 'won');
-    Share.share({ message });
-  };
+  if (mode === 'practice') {
+    return <PracticeGameView onExitPractice={() => setMode('daily')} />;
+  }
 
-  return (
-    <View className={gameScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
-      <Grid guesses={state.guesses} currentGuess={state.currentGuess} shakeTrigger={shakeTrigger} />
-      <View className={gameScreenStyles.controls}>
-        <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} />
-        <ActionBar onEnter={() => handleKeyPress('ENTER')} />
-      </View>
-      <ResultModal
-        visible={isGameOver}
-        won={state.status === 'won'}
-        stats={stats}
-        onShare={handleShare}
-        onClose={() => {}}
-      />
-    </View>
-  );
+  return <DailyGameView onStartPractice={() => setMode('practice')} />;
 }
