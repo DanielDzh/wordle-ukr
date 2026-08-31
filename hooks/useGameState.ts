@@ -1,8 +1,8 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { WORDS } from '../data/words';
 import { getTodayWord } from '../lib/daily-word';
 import { createInitialGameState, gameReducer } from '../lib/game-reducer';
-import { hapticError, hapticSuccess } from '../lib/haptics';
+import { hapticError, hapticLight, hapticSuccess } from '../lib/haptics';
 import { mergeLetterStates } from '../lib/keyboard-letter-states';
 import { createInitialStats, updateStats } from '../lib/stats';
 import { loadDailyGame, loadStats, saveDailyGame, saveStats } from '../lib/storage';
@@ -18,6 +18,7 @@ export function useGameState() {
   const [stats, setStats] = useState<Stats>(createInitialStats());
   const [hydrated, setHydrated] = useState(false);
   const [statsRecorded, setStatsRecorded] = useState(false);
+  const prevShakeTrigger = useRef(state.shakeTrigger);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,6 +44,13 @@ export function useGameState() {
   }, [state, hydrated, today]);
 
   useEffect(() => {
+    if (state.shakeTrigger !== prevShakeTrigger.current) {
+      hapticLight();
+      prevShakeTrigger.current = state.shakeTrigger;
+    }
+  }, [state.shakeTrigger]);
+
+  useEffect(() => {
     if (state.status === 'playing' || statsRecorded) return;
     const won = state.status === 'won';
     const next = updateStats(stats, won, state.guesses.length);
@@ -63,6 +71,7 @@ export function useGameState() {
     state,
     stats,
     letterStates: mergeLetterStates(state.guesses),
+    shakeTrigger: state.shakeTrigger,
     handleKeyPress: (key: string) => dispatch({ type: 'KEY_PRESS', key }),
   };
 }

@@ -1,4 +1,15 @@
-import { createInitialGameState, gameReducer } from './game-reducer';
+import { createInitialGameState, gameReducer, isValidWord } from './game-reducer';
+
+describe('isValidWord', () => {
+  it('returns true for a word in the dictionary, case-insensitively', () => {
+    expect(isValidWord('ЗЕБРА')).toBe(true);
+    expect(isValidWord('зебра')).toBe(true);
+  });
+
+  it('returns false for a nonsense letter combination', () => {
+    expect(isValidWord('ХХХХХ')).toBe(false);
+  });
+});
 
 describe('gameReducer', () => {
   it('appends a typed letter to currentGuess', () => {
@@ -40,6 +51,24 @@ describe('gameReducer', () => {
     state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
     expect(state.currentGuess).toBe('ХХХХХ');
     expect(state.guesses).toHaveLength(0);
+  });
+
+  it('increments shakeTrigger by 1 each time, even from state hydrated before shakeTrigger existed', () => {
+    // Simulates a daily-game state persisted by an older app version, before the
+    // shakeTrigger field was added — AsyncStorage will happily return this shape.
+    const legacyState = {
+      ...createInitialGameState('зебра'),
+      shakeTrigger: undefined as unknown as number,
+    };
+    let state = legacyState;
+    'ХХХХХ'.split('').forEach((letter) => {
+      state = gameReducer(state, { type: 'KEY_PRESS', key: letter });
+    });
+    state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+    expect(state.shakeTrigger).toBe(1);
+
+    state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+    expect(state.shakeTrigger).toBe(2);
   });
 
   it('marks the game won when a 5-letter guess matches the answer', () => {

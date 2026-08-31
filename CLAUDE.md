@@ -38,6 +38,10 @@ Each component has a sibling file with its classes (e.g. an object of className 
 
 `render()` from `@testing-library/react-native` v14 is an async function (the new concurrent test renderer). Always `await render(...)` in tests, otherwise `screen.getByText` etc. throw `` `render` function has not been called ``. `renderHook()` is async too, for the same reason — always `await renderHook(...)`. When `fireEvent.press(...)` triggers a `setState` whose result the next assertion depends on, wrap it in `await act(async () => { fireEvent.press(...) })` — a bare `fireEvent.press` doesn't reliably flush the update first in this concurrent renderer.
 
+## Persisted game state (AsyncStorage schema drift)
+
+`GameState` is serialized as-is into AsyncStorage (`saveDailyGame`) and restored via a `HYDRATE` action that trusts the stored shape completely. Adding a new required field to `GameState` (like `shakeTrigger`) means any state saved by an older build won't have it — `HYDRATE` will happily set `state.shakeTrigger` to `undefined`. Doing arithmetic on that (`undefined + 1` → `NaN`) is especially dangerous: `NaN + 1` stays `NaN` forever, and React's effect-dependency check treats `NaN` as equal to itself (`Object.is(NaN, NaN)` is `true`), so an effect watching that field silently stops firing for the rest of that game — no crash, no error, just a feature that quietly stops working. When incrementing a persisted numeric field in the reducer, guard with `?? 0` (or otherwise validate/backfill on hydration) rather than assuming the stored shape matches the current `GameState` type.
+
 ## Word list
 
 - `data/words.ts` — the daily-answer pool (Week 1's small hand-picked list, ~33 words)

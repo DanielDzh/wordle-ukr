@@ -10,7 +10,7 @@ import { useGameState } from '../../hooks/useGameState';
 import { gameScreenStyles } from './GameScreen.styles';
 
 export function GameScreen() {
-  const { state, stats, letterStates, handleKeyPress } = useGameState();
+  const { state, stats, letterStates, shakeTrigger, handleKeyPress } = useGameState();
   const isGameOver = state.status !== 'playing';
   const insets = useSafeAreaInsets();
 
@@ -22,7 +22,7 @@ export function GameScreen() {
 
   return (
     <View className={gameScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
-      <Grid guesses={state.guesses} currentGuess={state.currentGuess} />
+      <Grid guesses={state.guesses} currentGuess={state.currentGuess} shakeTrigger={shakeTrigger} />
       <View className={gameScreenStyles.controls}>
         <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} />
         <ActionBar onEnter={() => handleKeyPress('ENTER')} />

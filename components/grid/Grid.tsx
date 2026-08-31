@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import type { LetterState } from '../../types/game';
 import { Tile } from './Tile';
 import { gridStyles } from './Grid.styles';
@@ -14,9 +16,27 @@ type GuessRow = {
 type GridProps = {
   guesses: GuessRow[];
   currentGuess?: string;
+  shakeTrigger?: number;
 };
 
-export function Grid({ guesses, currentGuess = '' }: GridProps) {
+export function Grid({ guesses, currentGuess = '', shakeTrigger = 0 }: GridProps) {
+  const shakeX = useSharedValue(0);
+
+  useEffect(() => {
+    if (shakeTrigger === 0) return;
+    shakeX.value = withSequence(
+      withTiming(-8, { duration: 50 }),
+      withTiming(8, { duration: 50 }),
+      withTiming(-8, { duration: 50 }),
+      withTiming(8, { duration: 50 }),
+      withTiming(0, { duration: 50 }),
+    );
+  }, [shakeTrigger, shakeX]);
+
+  const shakeStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shakeX.value }],
+  }));
+
   const emptyRow: GuessRow = {
     letters: Array(COLS).fill(''),
     states: Array(COLS).fill('empty'),
@@ -36,7 +56,11 @@ export function Grid({ guesses, currentGuess = '' }: GridProps) {
   return (
     <View className={gridStyles.container}>
       {rows.map((row, rowIndex) => (
-        <View key={rowIndex} className={gridStyles.row}>
+        <Animated.View
+          key={rowIndex}
+          className={gridStyles.row}
+          style={rowIndex === guesses.length ? shakeStyle : undefined}
+        >
           {row.letters.map((letter, colIndex) => (
             <Tile
               key={colIndex}
@@ -45,7 +69,7 @@ export function Grid({ guesses, currentGuess = '' }: GridProps) {
               revealDelay={colIndex * 150}
             />
           ))}
-        </View>
+        </Animated.View>
       ))}
     </View>
   );

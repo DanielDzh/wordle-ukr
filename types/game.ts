@@ -14,6 +14,7 @@ export type GameState = {
   answer: string;
   currentGuess: string;
   guesses: Guess[];
+  shakeTrigger: number;
 };
 
 export type GameAction = { type: 'KEY_PRESS'; key: string } | { type: 'HYDRATE'; state: GameState };

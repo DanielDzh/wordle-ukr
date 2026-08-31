@@ -6,8 +6,12 @@ const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
 const VALID_WORD_SET = new Set(VALID_WORDS);
 
+export function isValidWord(word: string): boolean {
+  return VALID_WORD_SET.has(word.toLowerCase());
+}
+
 export function createInitialGameState(answer: string): GameState {
-  return { status: 'playing', answer, currentGuess: '', guesses: [] };
+  return { status: 'playing', answer, currentGuess: '', guesses: [], shakeTrigger: 0 };
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -28,8 +32,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return state;
     }
 
-    if (!VALID_WORD_SET.has(state.currentGuess.toLowerCase())) {
-      return state;
+    if (!isValidWord(state.currentGuess)) {
+      // `?? 0` guards against state hydrated from AsyncStorage before this field
+      // existed — without it, `undefined + 1` is NaN, and NaN + 1 stays NaN forever
+      // (React's effect-dependency check treats NaN as equal to itself), silently
+      // breaking the shake animation for the rest of that game.
+      return { ...state, shakeTrigger: (state.shakeTrigger ?? 0) + 1 };
     }
 
     const letters = state.currentGuess.split('');
