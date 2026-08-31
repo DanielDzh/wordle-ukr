@@ -32,6 +32,16 @@ describe('gameReducer', () => {
     expect(state.guesses).toHaveLength(0);
   });
 
+  it('does nothing on ENTER when the guess is not a real word', () => {
+    let state = createInitialGameState('зебра');
+    'ХХХХХ'.split('').forEach((letter) => {
+      state = gameReducer(state, { type: 'KEY_PRESS', key: letter });
+    });
+    state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+    expect(state.currentGuess).toBe('ХХХХХ');
+    expect(state.guesses).toHaveLength(0);
+  });
+
   it('marks the game won when a 5-letter guess matches the answer', () => {
     let state = createInitialGameState('зебра');
     'ЗЕБРА'.split('').forEach((letter) => {

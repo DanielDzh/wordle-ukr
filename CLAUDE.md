@@ -40,7 +40,9 @@ Each component has a sibling file with its classes (e.g. an object of className 
 
 ## Word list
 
-Week 1: a small starter list of 5-letter Ukrainian words (~50-100 words), hand-picked, for the prototype. The full dictionary comes later.
+- `data/words.ts` — the daily-answer pool (Week 1's small hand-picked list, ~33 words)
+- `data/valid-words.ts` — the accepted-guess dictionary (318 words). Sourced from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords) (`uk_50k.txt`, CC BY-SA 4.0), filtered to 5-letter words, cross-checked against the Russian frequency list from the same corpus to drop likely contamination, then manually spot-checked. Attribution is required by the license — see the comment at the top of the file. This is a starting set, not exhaustive; expand it as real gameplay surfaces missing common words.
+- `game-reducer.ts` rejects ENTER (as a no-op, same as a too-short guess) when the typed word isn't in `VALID_WORDS` — every daily answer is included in that set so it's always accepted as a guess.
 
 ## Overall plan (4 weeks)
 

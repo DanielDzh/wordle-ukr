@@ -1,8 +1,10 @@
+import { VALID_WORDS } from '../data/valid-words';
 import { compareWord } from './word-comparison';
 import type { GameAction, GameState } from '../types/game';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
+const VALID_WORD_SET = new Set(VALID_WORDS);
 
 export function createInitialGameState(answer: string): GameState {
   return { status: 'playing', answer, currentGuess: '', guesses: [] };
@@ -23,6 +25,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
   if (action.key === 'ENTER') {
     if (state.currentGuess.length !== WORD_LENGTH) {
+      return state;
+    }
+
+    if (!VALID_WORD_SET.has(state.currentGuess.toLowerCase())) {
       return state;
     }
 
