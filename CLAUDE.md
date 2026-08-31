@@ -1,43 +1,50 @@
-# Wordle UA — конвенції проєкту
+# Wordle UA — project conventions
 
-Wordle українською мовою. Expo (React Native) + TypeScript. Менторський формат: пояснювати рішення й підходи по ходу роботи, не просто писати код мовчки.
+## Working rules (important)
 
-## Стек
+- **Never run `git commit` or `git push` without explicit permission every single time** — approval for the overall plan/task does not cover each individual commit.
+- **Never run `git merge`** — only the project owner merges branches.
+- When executing a multi-step plan — pause and explain after each task, don't silently run through the whole plan and report only at the end.
+- Before declaring quickly-done work "complete" — double-check it again; speed is not a proxy for correctness.
+
+Wordle in Ukrainian. Expo (React Native) + TypeScript. Decisions and approaches are explained step by step, not just implemented silently.
+
+## Stack
 
 - Expo + TypeScript
 - Package manager: **yarn**
-- Навігація: **React Navigation** (NativeStack), без Expo Router — свідомий вибір, щоб розуміти навігацію "знизу вгору"
-- Стилі: **NativeWind** (Tailwind для RN)
-- Анімації: Reanimated (`react-native-reanimated` + `react-native-worklets`) — встановлено вже на Тижні 1 як залежність NativeWind (css-interop потребує їх під капотом), використовуватимемо явно для переворту плиток на Тижні 2
-- Тестування: Jest + React Native Testing Library (jest-expo preset), **TDD з самого початку**
-- Лінтинг: ESLint + Prettier одразу з самого старту (eslint-config-expo)
-- Без бекенду на старті — слово дня визначається локально за формулою від дати
-- AsyncStorage — статистика, streak
+- Navigation: **React Navigation** (NativeStack), no Expo Router — a deliberate choice, to understand navigation bottom-up
+- Styles: **NativeWind** (Tailwind for RN)
+- Animations: Reanimated (`react-native-reanimated` + `react-native-worklets`) — already installed in Week 1 as a NativeWind dependency (css-interop needs them under the hood), will be used explicitly for the tile-flip animation in Week 2
+- Testing: Jest + React Native Testing Library (jest-expo preset), **TDD from the start**
+- Linting: ESLint + Prettier from day one (eslint-config-expo)
+- No backend at launch — the daily word is derived locally from a date-based formula
+- AsyncStorage — stats, streak
 
-## Правило стилів (NativeWind)
+## Styling rule (NativeWind)
 
-**Усі стилі винесені в окремі файли, не inline `className` в JSX.**
+**All styles live in separate files, never inline `className` in JSX.**
 
-Кожен компонент має поруч файл зі своїми класами (наприклад через `styled` / об'єкт з className-рядками), а не строкові класи безпосередньо в розмітці компонента. Мета — тримати JSX чистим від верстки, легко рефакторити стилі окремо від логіки.
+Each component has a sibling file with its classes (e.g. an object of className strings), not string classes directly in the component markup. Goal: keep JSX free of layout detail, and let styles be refactored independently of logic.
 
-## Git-стратегія
+## Git strategy
 
-- `main` — тільки продакшн-реліз (те, що йде в App Store / Google Play)
-- `develop` — базова гілка розробки, від неї відгалужуються фічі
-- `feature/*` — гілки під конкретні таски/тижні, мержаться в `develop` через PR
-- Ніколи не комітити напряму в `main` чи `develop` — завжди через гілку + PR
+- `main` — production release only (what ships to the App Store / Google Play)
+- `develop` — base development branch, features branch off it
+- `feature/*` — branches for specific tasks/weeks, merged into `develop` via PR
+- Never commit directly to `main` or `develop` — always through a branch + PR
 
-## Тестування (RNTL v14)
+## Testing (RNTL v14)
 
-`render()` з `@testing-library/react-native` v14 — асинхронна функція (новий concurrent test-renderer). Завжди `await render(...)` у тестах, інакше `screen.getByText` тощо кидають `` `render` function has not been called ``.
+`render()` from `@testing-library/react-native` v14 is an async function (the new concurrent test renderer). Always `await render(...)` in tests, otherwise `screen.getByText` etc. throw `` `render` function has not been called ``.
 
-## Словник слів
+## Word list
 
-Тиждень 1: невеликий стартовий список 5-літерних українських слів генерується вручну/через LLM (~50-100 слів) для прототипу. Повний словник — пізніше.
+Week 1: a small starter list of 5-letter Ukrainian words (~50-100 words), hand-picked, for the prototype. The full dictionary comes later.
 
-## Загальний план (4 тижні)
+## Overall plan (4 weeks)
 
-- **Тиждень 1** — Setup Expo, UI сітки (6x5) та клавіатури, логіка порівняння слова, базовий словник
-- **Тиждень 2** — Win/lose стани, анімація перевороту плиток, слово дня за датою, локальна статистика
-- **Тиждень 3** — Онбординг, темна тема, "Поділитись результатом", іконка/splash, тест на реальних пристроях
-- **Тиждень 4** — App Store Connect / Google Play підготовка, EAS Build, подача на review
+- **Week 1** — Expo setup, grid (6x5) and keyboard UI, word comparison logic, starter word list
+- **Week 2** — Win/lose states, tile-flip animation, date-based daily word, local stats
+- **Week 3** — Onboarding, dark theme, "Share result", app icon/splash, testing on real devices
+- **Week 4** — App Store Connect / Google Play submission prep, EAS Build, review submission

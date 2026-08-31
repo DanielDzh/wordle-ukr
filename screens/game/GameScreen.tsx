@@ -5,7 +5,7 @@ import { gameScreenStyles } from './GameScreen.styles';
 
 export function GameScreen() {
   const handleKeyPress = (key: string) => {
-    // Обробка вводу — Тиждень 2. Поки no-op.
+    // Input handling lands in Week 2 — no-op for now.
     console.log('key pressed:', key);
   };
 
