@@ -10,7 +10,7 @@ export const resultModalStyles = {
   distribution: 'mb-4',
   distributionRow: 'flex-row items-center mb-1',
   distributionLabel: 'w-4 text-xs text-black dark:text-white',
-  distributionBar: 'bg-green-600 rounded-md justify-end px-1 min-h-[18px]',
+  distributionBar: 'bg-green-600 rounded-md justify-center px-1 min-h-[18px]',
   distributionCount: 'text-white text-xs font-semibold',
   practiceButton: 'bg-amber-500 rounded-xl py-3 items-center mb-2',
   practiceButtonText: 'text-white font-bold',

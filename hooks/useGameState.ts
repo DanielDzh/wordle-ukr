@@ -19,6 +19,11 @@ export function useGameState() {
   const [hydrated, setHydrated] = useState(false);
   const [statsRecorded, setStatsRecorded] = useState(false);
   const prevShakeTrigger = useRef(state.shakeTrigger);
+  // Distinct from state.shakeTrigger (which is persisted and restored as-is on
+  // hydration): this only increments for a shake that happens live, in this
+  // session, so restoring a game with a nonzero shakeTrigger from an earlier
+  // invalid guess today doesn't replay the shake animation on every reopen.
+  const [sessionShakeTrigger, setSessionShakeTrigger] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,6 +33,7 @@ export function useGameState() {
       if (cancelled) return;
       if (savedStats) setStats(savedStats);
       if (savedGame && savedGame.date === todayKey(today)) {
+        prevShakeTrigger.current = savedGame.state.shakeTrigger ?? 0;
         dispatch({ type: 'HYDRATE', state: savedGame.state });
       }
       setHydrated(true);
@@ -44,11 +50,13 @@ export function useGameState() {
   }, [state, hydrated, today]);
 
   useEffect(() => {
+    if (!hydrated) return;
     if (state.shakeTrigger !== prevShakeTrigger.current) {
       hapticLight();
       prevShakeTrigger.current = state.shakeTrigger;
+      setSessionShakeTrigger((n) => n + 1);
     }
-  }, [state.shakeTrigger]);
+  }, [state.shakeTrigger, hydrated]);
 
   useEffect(() => {
     if (state.status === 'playing' || statsRecorded) return;
@@ -71,7 +79,7 @@ export function useGameState() {
     state,
     stats,
     letterStates: mergeLetterStates(state.guesses),
-    shakeTrigger: state.shakeTrigger,
+    shakeTrigger: sessionShakeTrigger,
     hintsRemaining: MAX_HINTS - (state.hintsUsed ?? 0),
     handleKeyPress: (key: string) => dispatch({ type: 'KEY_PRESS', key }),
     handleHint: () => dispatch({ type: 'HINT' }),
