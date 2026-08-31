@@ -1463,7 +1463,7 @@ describe('useGameState', () => {
 
   beforeEach(() => {
     // Freeze "today" to the epoch date so the daily word is deterministic (WORDS[0]).
-    global.Date = class extends RealDate {
+    globalThis.Date = class extends RealDate {
       constructor(...args: unknown[]) {
         if (args.length === 0) {
           super(EPOCH_DATE.getTime());
@@ -1476,17 +1476,19 @@ describe('useGameState', () => {
   });
 
   afterEach(() => {
-    global.Date = RealDate;
+    globalThis.Date = RealDate;
   });
 
   it('starts a game against the daily word', async () => {
-    const { result } = renderHook(() => useGameState());
+    const { result } = await renderHook(() => useGameState());
     await waitFor(() => expect(result.current.state.answer).toBe('зебра'));
     expect(result.current.state.status).toBe('playing');
     expect(result.current.stats.gamesPlayed).toBe(0);
   });
 });
 ```
+
+`renderHook` is async in this RNTL version, same as `render` (see the Week 1 note on `render()`) — always `await renderHook(...)`, otherwise `result` is `undefined`. `globalThis.Date` is used instead of `global.Date` — this project's tsconfig has no `@types/node`, so `global` doesn't type-check, while `globalThis` is standard JS and needs no extra types.
 
 - [ ] **Step 2: Run the test, confirm it fails**
 
@@ -1583,7 +1585,7 @@ Add to `hooks/useGameState.test.ts`:
 import { act } from '@testing-library/react-native';
 
   it('records a win in stats once the game is won', async () => {
-    const { result } = renderHook(() => useGameState());
+    const { result } = await renderHook(() => useGameState());
     await waitFor(() => expect(result.current.state.status).toBe('playing'));
 
     await act(async () => {
