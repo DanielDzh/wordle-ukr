@@ -1,7 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { GameScreen } from '../screens/game/GameScreen';
 import { OnboardingScreen } from '../screens/onboarding/OnboardingScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
@@ -30,19 +28,8 @@ export function AppNavigator() {
           component={OnboardingScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="Game"
-          component={GameScreen}
-          options={({ navigation }) => ({
-            title: 'Wordle UA',
-            headerRight: () => (
-              <Pressable onPress={() => navigation.navigate('Settings')} hitSlop={8}>
-                <Ionicons name="settings-outline" size={24} color="#374151" />
-              </Pressable>
-            ),
-          })}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Налаштування' }} />
+        <Stack.Screen name="Game" component={GameScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
