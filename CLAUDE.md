@@ -27,6 +27,10 @@ Wordle українською мовою. Expo (React Native) + TypeScript. Ме
 - `feature/*` — гілки під конкретні таски/тижні, мержаться в `develop` через PR
 - Ніколи не комітити напряму в `main` чи `develop` — завжди через гілку + PR
 
+## Тестування (RNTL v14)
+
+`render()` з `@testing-library/react-native` v14 — асинхронна функція (новий concurrent test-renderer). Завжди `await render(...)` у тестах, інакше `screen.getByText` тощо кидають `` `render` function has not been called ``.
+
 ## Словник слів
 
 Тиждень 1: невеликий стартовий список 5-літерних українських слів генерується вручну/через LLM (~50-100 слів) для прототипу. Повний словник — пізніше.
