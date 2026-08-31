@@ -1,6 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { EPOCH_DATE } from '../lib/daily-word';
+import { createInitialGameState } from '../lib/game-reducer';
+import { saveDailyGame } from '../lib/storage';
 import { useGameState } from './useGameState';
 
 describe('useGameState', () => {
@@ -73,6 +75,17 @@ describe('useGameState', () => {
     });
 
     expect(result.current.shakeTrigger).toBe(before);
+  });
+
+  it('does not replay the shake when reopening a game that already had an invalid guess today', async () => {
+    const savedState = { ...createInitialGameState('зебра'), shakeTrigger: 1 };
+    await saveDailyGame('2026-8-31', savedState);
+
+    const { result } = await renderHook(() => useGameState());
+    await waitFor(() => expect(result.current.state.status).toBe('playing'));
+
+    expect(result.current.state.shakeTrigger).toBe(1);
+    expect(result.current.shakeTrigger).toBe(0);
   });
 
   it('reveals a letter and decrements hintsRemaining when handleHint is called', async () => {
