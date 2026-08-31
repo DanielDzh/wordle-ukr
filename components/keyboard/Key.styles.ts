@@ -4,7 +4,7 @@ export const keyStyles = {
   narrow: 'flex-1',
   text: 'text-xs font-semibold',
   states: {
-    default: { bg: 'bg-gray-300', text: 'text-black' },
+    default: { bg: 'bg-gray-300 dark:bg-gray-700', text: 'text-black dark:text-white' },
     correct: { bg: 'bg-green-600', text: 'text-white' },
     present: { bg: 'bg-yellow-500', text: 'text-white' },
     absent: { bg: 'bg-gray-500', text: 'text-white' },
