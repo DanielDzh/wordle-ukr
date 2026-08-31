@@ -56,13 +56,22 @@ yarn start
 
 Expected: Metro bundler піднімається без помилок. Зупинити (Ctrl+C) після перевірки.
 
-- [ ] **Step 4: Ініціалізувати git та зробити перший коміт**
+- [ ] **Step 4: Ініціалізувати git та зробити перший коміт на `main`**
 
 ```bash
 git init
 git add .
 git commit -m "feat: init expo project scaffold"
 ```
+
+- [ ] **Step 5: Створити `develop` та гілку фічі для Тижня 1**
+
+```bash
+git branch develop
+git checkout -b feature/week1-setup develop
+```
+
+Усі наступні таски (2-12) комітяться в `feature/week1-setup`. У кінці Тижня 1 — PR у `develop` (не в `main`).
 
 ---
 
@@ -354,7 +363,7 @@ Expected: PASS.
 
 ```ts
   it('returns all "absent" when no letters match', () => {
-    expect(compareWord('шкода', 'зебра')).toEqual([
+    expect(compareWord('лимон', 'зебра')).toEqual([
       'absent', 'absent', 'absent', 'absent', 'absent',
     ]);
   });
@@ -362,14 +371,18 @@ Expected: PASS.
 
 Запустити `yarn test word-comparison` — Expected: FAIL (поточна реалізація завжди повертає `correct`).
 
+Слова мають не мати жодної спільної літери — при виконанні виявилось, що «шкода»/«зебра» ділять літеру «а» на тій самій позиції, тож тест на «усе absent» з такими словами хибно падає.
+
 - [ ] **Step 6: Додати тест на "літера є, але не на своєму місці"**
 
 Додати в `lib/word-comparison.test.ts`:
 
 ```ts
   it('marks a letter as "present" when it exists elsewhere in the answer', () => {
+    // "б" is correct (same position in both); "у" is absent (not in answer at all);
+    // "а", "р", "з" exist in the answer but at other positions -> "present"
     expect(compareWord('арбуз', 'зебра')).toEqual([
-      'present', 'present', 'absent', 'present', 'present',
+      'present', 'present', 'correct', 'absent', 'present',
     ]);
   });
 ```
@@ -420,9 +433,11 @@ Expected: PASS, 3 tests.
 
 ```ts
   it('handles duplicate letters correctly — does not over-mark "present"', () => {
-    // answer has only one "а", guess has two "а"
+    // answer "арбуз" has one "а" (used up by position 0's "correct") and one "р";
+    // guess "азарт" has a second "а" at index 2 that must NOT be marked "present"
+    // since there's no "а" left in the answer to account for it.
     expect(compareWord('азарт', 'арбуз')).toEqual([
-      'correct', 'present', 'absent', 'absent', 'absent',
+      'correct', 'present', 'absent', 'present', 'absent',
     ]);
   });
 ```
