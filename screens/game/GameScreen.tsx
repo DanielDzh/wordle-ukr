@@ -23,8 +23,10 @@ export function GameScreen() {
   return (
     <View className={gameScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
       <Grid guesses={state.guesses} currentGuess={state.currentGuess} />
-      <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} />
-      <ActionBar onEnter={() => handleKeyPress('ENTER')} />
+      <View className={gameScreenStyles.controls}>
+        <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} />
+        <ActionBar onEnter={() => handleKeyPress('ENTER')} />
+      </View>
       <ResultModal
         visible={isGameOver}
         won={state.status === 'won'}
