@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { GameScreen } from '../screens/game/GameScreen';
 import { OnboardingScreen } from '../screens/onboarding/OnboardingScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
@@ -35,8 +36,8 @@ export function AppNavigator() {
           options={({ navigation }) => ({
             title: 'Wordle UA',
             headerRight: () => (
-              <Pressable onPress={() => navigation.navigate('Settings')}>
-                <Text className="text-xl">⚙️</Text>
+              <Pressable onPress={() => navigation.navigate('Settings')} hitSlop={8}>
+                <Ionicons name="settings-outline" size={24} color="#374151" />
               </Pressable>
             ),
           })}
