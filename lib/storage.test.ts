@@ -1,6 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createInitialGameState } from './game-reducer';
-import { loadDailyGame, loadStats, saveDailyGame, saveStats } from './storage';
+import {
+  loadDailyGame,
+  loadOnboardingSeen,
+  loadStats,
+  loadThemePreference,
+  markOnboardingSeen,
+  saveDailyGame,
+  saveStats,
+  saveThemePreference,
+} from './storage';
 import type { Stats } from '../types/game';
 
 describe('storage', () => {
@@ -32,5 +41,23 @@ describe('storage', () => {
 
   it('returns null when no daily game has been saved', async () => {
     expect(await loadDailyGame()).toBeNull();
+  });
+
+  it('returns false for onboarding-seen before it is marked', async () => {
+    expect(await loadOnboardingSeen()).toBe(false);
+  });
+
+  it('returns true after marking onboarding as seen', async () => {
+    await markOnboardingSeen();
+    expect(await loadOnboardingSeen()).toBe(true);
+  });
+
+  it('returns null for theme preference before one is saved', async () => {
+    expect(await loadThemePreference()).toBeNull();
+  });
+
+  it('saves and loads a theme preference', async () => {
+    await saveThemePreference('dark');
+    expect(await loadThemePreference()).toBe('dark');
   });
 });
