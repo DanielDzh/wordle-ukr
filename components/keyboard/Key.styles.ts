@@ -1,5 +1,5 @@
 export const keyStyles = {
-  base: 'h-12 rounded items-center justify-center px-1',
+  base: 'h-12 rounded-xl items-center justify-center px-1',
   wide: 'flex-[2.2]',
   narrow: 'flex-1',
   text: 'text-xs font-semibold',
