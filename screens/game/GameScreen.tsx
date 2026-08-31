@@ -1,5 +1,6 @@
 import { Share, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActionBar } from '../../components/keyboard/ActionBar';
 import { Grid } from '../../components/grid/Grid';
 import { Keyboard } from '../../components/keyboard/Keyboard';
 import { ResultModal } from '../../components/modal/ResultModal';
@@ -23,6 +24,7 @@ export function GameScreen() {
     <View className={gameScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
       <Grid guesses={state.guesses} currentGuess={state.currentGuess} />
       <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} />
+      <ActionBar onEnter={() => handleKeyPress('ENTER')} />
       <ResultModal
         visible={isGameOver}
         won={state.status === 'won'}

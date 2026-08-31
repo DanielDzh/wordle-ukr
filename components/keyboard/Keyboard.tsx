@@ -6,7 +6,7 @@ import type { LetterState } from '../../types/game';
 const ROWS = [
   ['Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х'],
   ['Ф', 'І', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Є'],
-  ['ENTER', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', 'DELETE'],
+  ['Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', 'DELETE'],
 ];
 
 type KeyboardProps = {
@@ -24,7 +24,7 @@ export function Keyboard({ onKeyPress, letterStates = {} }: KeyboardProps) {
               key={label}
               label={label}
               onPress={() => onKeyPress(label)}
-              wide={label === 'ENTER' || label === 'DELETE'}
+              wide={label === 'DELETE'}
               state={letterStates[label]}
             />
           ))}

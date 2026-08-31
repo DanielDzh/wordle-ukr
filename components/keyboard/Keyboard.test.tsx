@@ -9,11 +9,12 @@ describe('Keyboard', () => {
     expect(onKeyPress).toHaveBeenCalledWith('А');
   });
 
-  it('renders ENTER and DELETE keys', async () => {
+  it('renders the DELETE key but not ENTER (ENTER moved to ActionBar)', async () => {
     const onKeyPress = jest.fn();
     await render(<Keyboard onKeyPress={onKeyPress} />);
-    fireEvent.press(screen.getByText('ENTER'));
-    expect(onKeyPress).toHaveBeenCalledWith('ENTER');
+    fireEvent.press(screen.getByText('DELETE'));
+    expect(onKeyPress).toHaveBeenCalledWith('DELETE');
+    expect(screen.queryByText('ENTER')).toBeNull();
   });
 
   it('colors a key according to the given letterStates', async () => {
