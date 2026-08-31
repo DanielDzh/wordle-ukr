@@ -8,4 +8,10 @@ describe('Key', () => {
     fireEvent.press(screen.getByText('А'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
+
+  it('applies the correct-state background class when a state is given', async () => {
+    await render(<Key label="А" onPress={() => {}} state="correct" />);
+    const key = screen.getByText('А').parent;
+    expect(key?.props.className).toContain('bg-green-600');
+  });
 });

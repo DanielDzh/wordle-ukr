@@ -15,4 +15,11 @@ describe('Keyboard', () => {
     fireEvent.press(screen.getByText('ENTER'));
     expect(onKeyPress).toHaveBeenCalledWith('ENTER');
   });
+
+  it('colors a key according to the given letterStates', async () => {
+    const onKeyPress = jest.fn();
+    await render(<Keyboard onKeyPress={onKeyPress} letterStates={{ А: 'correct' }} />);
+    const key = screen.getByText('А').parent;
+    expect(key?.props.className).toContain('bg-green-600');
+  });
 });
