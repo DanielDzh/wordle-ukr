@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Text } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import type { LetterState } from '../../types/game';
 import { tileStyles } from './Tile.styles';
 
@@ -20,7 +26,13 @@ export function Tile({ letter, state, revealDelay = 0 }: TileProps) {
     prevState.current = state;
 
     if (wasEmpty && state !== 'empty') {
-      rotation.value = withDelay(revealDelay, withTiming(180, { duration: 250 }));
+      // Flip to edge-on (90deg), swap the color/content while invisible, then flip
+      // back to 0deg — ending at 180deg (as an earlier version did) leaves the tile
+      // visually upside down forever instead of completing the flip.
+      rotation.value = withDelay(
+        revealDelay,
+        withSequence(withTiming(90, { duration: 125 }), withTiming(0, { duration: 125 })),
+      );
       const timeout = setTimeout(() => setDisplayState(state), revealDelay + 125);
       return () => clearTimeout(timeout);
     }
@@ -32,12 +44,11 @@ export function Tile({ letter, state, revealDelay = 0 }: TileProps) {
     transform: [{ rotateX: `${rotation.value}deg` }],
   }));
 
+  const colors = tileStyles.states[displayState];
+
   return (
-    <Animated.View
-      style={animatedStyle}
-      className={`${tileStyles.base} ${tileStyles.states[displayState]}`}
-    >
-      <Text className={tileStyles.text}>{letter}</Text>
+    <Animated.View style={animatedStyle} className={`${tileStyles.base} ${colors.bg}`}>
+      <Text className={`${tileStyles.textBase} ${colors.text}`}>{letter}</Text>
     </Animated.View>
   );
 }

@@ -13,14 +13,25 @@ type GuessRow = {
 
 type GridProps = {
   guesses: GuessRow[];
+  currentGuess?: string;
 };
 
-export function Grid({ guesses }: GridProps) {
+export function Grid({ guesses, currentGuess = '' }: GridProps) {
   const emptyRow: GuessRow = {
     letters: Array(COLS).fill(''),
     states: Array(COLS).fill('empty'),
   };
-  const rows = Array.from({ length: ROWS }, (_, i) => guesses[i] ?? emptyRow);
+
+  const currentGuessRow: GuessRow = {
+    letters: Array.from({ length: COLS }, (_, i) => currentGuess[i] ?? ''),
+    states: Array(COLS).fill('empty'),
+  };
+
+  const rows = Array.from({ length: ROWS }, (_, i) => {
+    if (i < guesses.length) return guesses[i];
+    if (i === guesses.length) return currentGuessRow;
+    return emptyRow;
+  });
 
   return (
     <View className={gridStyles.container}>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Tile } from '../../components/grid/Tile';
 import { markOnboardingSeen } from '../../lib/storage';
 import { onboardingStyles } from './OnboardingScreen.styles';
@@ -27,6 +28,7 @@ type Props = {
 export function OnboardingScreen({ navigation }: Props) {
   const [step, setStep] = useState(0);
   const isLastStep = step === STEPS.length - 1;
+  const insets = useSafeAreaInsets();
 
   const finish = async () => {
     await markOnboardingSeen();
@@ -42,7 +44,10 @@ export function OnboardingScreen({ navigation }: Props) {
   };
 
   return (
-    <View className={onboardingStyles.container}>
+    <View
+      className={onboardingStyles.container}
+      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16 }}
+    >
       <View className={onboardingStyles.content}>
         <Text className={onboardingStyles.title}>{STEPS[step].title}</Text>
         <Text className={onboardingStyles.body}>{STEPS[step].body}</Text>

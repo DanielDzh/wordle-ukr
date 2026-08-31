@@ -1,4 +1,6 @@
 import { Share, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActionBar } from '../../components/keyboard/ActionBar';
 import { Grid } from '../../components/grid/Grid';
 import { Keyboard } from '../../components/keyboard/Keyboard';
 import { ResultModal } from '../../components/modal/ResultModal';
@@ -10,6 +12,7 @@ import { gameScreenStyles } from './GameScreen.styles';
 export function GameScreen() {
   const { state, stats, letterStates, handleKeyPress } = useGameState();
   const isGameOver = state.status !== 'playing';
+  const insets = useSafeAreaInsets();
 
   const handleShare = () => {
     const dayNumber = getDayNumber(new Date());
@@ -18,9 +21,10 @@ export function GameScreen() {
   };
 
   return (
-    <View className={gameScreenStyles.container}>
-      <Grid guesses={state.guesses} />
+    <View className={gameScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
+      <Grid guesses={state.guesses} currentGuess={state.currentGuess} />
       <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} />
+      <ActionBar onEnter={() => handleKeyPress('ENTER')} />
       <ResultModal
         visible={isGameOver}
         won={state.status === 'won'}
