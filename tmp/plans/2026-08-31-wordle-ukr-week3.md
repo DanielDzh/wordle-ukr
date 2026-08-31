@@ -577,10 +577,14 @@ import { loadOnboardingSeen } from '../../lib/storage';
     const navigation = { replace: jest.fn() } as any;
     await render(<OnboardingScreen navigation={navigation} route={{} as any} />);
 
-    fireEvent.press(screen.getByText('Далі'));
+    await act(async () => {
+      fireEvent.press(screen.getByText('Далі'));
+    });
     expect(screen.getByText('Що означають кольори')).toBeTruthy();
 
-    fireEvent.press(screen.getByText('Далі'));
+    await act(async () => {
+      fireEvent.press(screen.getByText('Далі'));
+    });
     expect(screen.getByText('Слово дня')).toBeTruthy();
     expect(screen.getByText('Почати гру')).toBeTruthy();
   });
@@ -599,6 +603,8 @@ import { loadOnboardingSeen } from '../../lib/storage';
 ```
 
 (Move the `describe` block's existing `afterEach` next to the new one, or merge them into a single `afterEach` — don't register two.)
+
+Both `fireEvent.press` calls that trigger a `setState` need the `act(async () => {...})` wrapper — plain `fireEvent.press(...)` outside `act` doesn't reliably flush the state update before the following assertion in this RNTL version (same underlying concurrent-renderer behavior as the `render()`/`renderHook()` async notes from Week 1-2).
 
 - [ ] **Step 7: Run all tests, confirm they pass**
 

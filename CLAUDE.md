@@ -36,7 +36,7 @@ Each component has a sibling file with its classes (e.g. an object of className 
 
 ## Testing (RNTL v14)
 
-`render()` from `@testing-library/react-native` v14 is an async function (the new concurrent test renderer). Always `await render(...)` in tests, otherwise `screen.getByText` etc. throw `` `render` function has not been called ``. `renderHook()` is async too, for the same reason — always `await renderHook(...)`.
+`render()` from `@testing-library/react-native` v14 is an async function (the new concurrent test renderer). Always `await render(...)` in tests, otherwise `screen.getByText` etc. throw `` `render` function has not been called ``. `renderHook()` is async too, for the same reason — always `await renderHook(...)`. When `fireEvent.press(...)` triggers a `setState` whose result the next assertion depends on, wrap it in `await act(async () => { fireEvent.press(...) })` — a bare `fireEvent.press` doesn't reliably flush the update first in this concurrent renderer.
 
 ## Word list
 
