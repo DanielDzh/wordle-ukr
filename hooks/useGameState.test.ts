@@ -74,4 +74,17 @@ describe('useGameState', () => {
 
     expect(result.current.shakeTrigger).toBe(before);
   });
+
+  it('reveals a letter and decrements hintsRemaining when handleHint is called', async () => {
+    const { result } = await renderHook(() => useGameState());
+    await waitFor(() => expect(result.current.state.status).toBe('playing'));
+    const before = result.current.hintsRemaining;
+
+    await act(async () => {
+      result.current.handleHint();
+    });
+
+    expect(result.current.hintsRemaining).toBe(before - 1);
+    expect(result.current.state.currentGuess).toBe('З');
+  });
 });

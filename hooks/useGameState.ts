@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { WORDS } from '../data/words';
 import { getTodayWord } from '../lib/daily-word';
-import { createInitialGameState, gameReducer } from '../lib/game-reducer';
+import { createInitialGameState, gameReducer, MAX_HINTS } from '../lib/game-reducer';
 import { hapticError, hapticLight, hapticSuccess } from '../lib/haptics';
 import { mergeLetterStates } from '../lib/keyboard-letter-states';
 import { createInitialStats, updateStats } from '../lib/stats';
@@ -72,6 +72,8 @@ export function useGameState() {
     stats,
     letterStates: mergeLetterStates(state.guesses),
     shakeTrigger: state.shakeTrigger,
+    hintsRemaining: MAX_HINTS - (state.hintsUsed ?? 0),
     handleKeyPress: (key: string) => dispatch({ type: 'KEY_PRESS', key }),
+    handleHint: () => dispatch({ type: 'HINT' }),
   };
 }

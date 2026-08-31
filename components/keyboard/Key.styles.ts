@@ -3,6 +3,7 @@ export const keyStyles = {
   wide: 'flex-[2.2]',
   narrow: 'flex-1',
   text: 'text-xs font-semibold',
+  disabled: 'opacity-40',
   states: {
     default: { bg: 'bg-gray-300 dark:bg-gray-700', text: 'text-black dark:text-white' },
     correct: { bg: 'bg-green-600', text: 'text-white' },

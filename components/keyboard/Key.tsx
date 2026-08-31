@@ -8,9 +8,10 @@ type KeyProps = {
   onPress: () => void;
   wide?: boolean;
   state?: LetterState;
+  disabled?: boolean;
 };
 
-export function Key({ label, onPress, wide = false, state }: KeyProps) {
+export function Key({ label, onPress, wide = false, state, disabled = false }: KeyProps) {
   const colors = state ? keyStyles.states[state] : keyStyles.states.default;
 
   const handlePress = () => {
@@ -21,7 +22,8 @@ export function Key({ label, onPress, wide = false, state }: KeyProps) {
   return (
     <Pressable
       onPress={handlePress}
-      className={`${keyStyles.base} ${wide ? keyStyles.wide : keyStyles.narrow} ${colors.bg}`}
+      disabled={disabled}
+      className={`${keyStyles.base} ${wide ? keyStyles.wide : keyStyles.narrow} ${colors.bg} ${disabled ? keyStyles.disabled : ''}`}
     >
       <Text className={`${keyStyles.text} ${colors.text}`}>{label}</Text>
     </Pressable>

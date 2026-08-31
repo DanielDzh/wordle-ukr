@@ -15,9 +15,13 @@ export type GameState = {
   currentGuess: string;
   guesses: Guess[];
   shakeTrigger: number;
+  hintsUsed: number;
 };
 
-export type GameAction = { type: 'KEY_PRESS'; key: string } | { type: 'HYDRATE'; state: GameState };
+export type GameAction =
+  | { type: 'KEY_PRESS'; key: string }
+  | { type: 'HYDRATE'; state: GameState }
+  | { type: 'HINT' };
 
 export type Stats = {
   gamesPlayed: number;
