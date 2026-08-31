@@ -1,4 +1,4 @@
-import { EPOCH_DATE, getDailyWordIndex, getTodayWord } from './daily-word';
+import { EPOCH_DATE, getDailyWordIndex, getDayNumber, getTodayWord } from './daily-word';
 
 describe('getDailyWordIndex', () => {
   it('returns 0 when today is the same calendar day as the epoch', () => {
@@ -23,5 +23,16 @@ describe('getDailyWordIndex', () => {
 describe('getTodayWord', () => {
   it('returns the first word on the epoch date', () => {
     expect(getTodayWord(['а', 'б', 'в'], EPOCH_DATE)).toBe('а');
+  });
+});
+
+describe('getDayNumber', () => {
+  it('returns 1 on the epoch date (day 1, not day 0)', () => {
+    expect(getDayNumber(EPOCH_DATE, EPOCH_DATE)).toBe(1);
+  });
+
+  it('returns 2 the day after the epoch', () => {
+    const today = new Date(2026, 8, 1);
+    expect(getDayNumber(today, EPOCH_DATE)).toBe(2);
   });
 });

@@ -1,8 +1,8 @@
 export const keyStyles = {
   base: 'h-12 rounded items-center justify-center px-1',
-  wide: 'flex-[1.5]',
+  wide: 'flex-[2.2]',
   narrow: 'flex-1',
-  text: 'text-sm font-semibold',
+  text: 'text-xs font-semibold',
   states: {
     default: { bg: 'bg-gray-300', text: 'text-black' },
     correct: { bg: 'bg-green-600', text: 'text-white' },

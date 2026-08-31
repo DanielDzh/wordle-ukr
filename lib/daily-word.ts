@@ -14,3 +14,7 @@ export function getTodayWord(words: string[], today: Date = new Date()): string 
   const index = getDailyWordIndex(today, EPOCH_DATE, words.length);
   return words[index];
 }
+
+export function getDayNumber(today: Date, epoch: Date = EPOCH_DATE): number {
+  return toLocalDayNumber(today) - toLocalDayNumber(epoch) + 1;
+}
