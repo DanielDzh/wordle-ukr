@@ -649,6 +649,12 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SettingsScreen } from './SettingsScreen';
 
+// See the note in hooks/useThemePreference.test.ts — NativeWind's setColorScheme
+// requires darkMode:'class' compiled into global.css, which Jest never processes.
+jest.mock('nativewind', () => ({
+  useColorScheme: () => ({ setColorScheme: jest.fn(), colorScheme: 'light' }),
+}));
+
 describe('SettingsScreen', () => {
   afterEach(async () => {
     await AsyncStorage.clear();
