@@ -8,7 +8,7 @@ Wordle українською мовою. Expo (React Native) + TypeScript. Ме
 - Package manager: **yarn**
 - Навігація: **React Navigation** (NativeStack), без Expo Router — свідомий вибір, щоб розуміти навігацію "знизу вгору"
 - Стилі: **NativeWind** (Tailwind для RN)
-- Анімації: Reanimated (Тиждень 2, переворот плиток)
+- Анімації: Reanimated (`react-native-reanimated` + `react-native-worklets`) — встановлено вже на Тижні 1 як залежність NativeWind (css-interop потребує їх під капотом), використовуватимемо явно для переворту плиток на Тижні 2
 - Тестування: Jest + React Native Testing Library (jest-expo preset), **TDD з самого початку**
 - Лінтинг: ESLint + Prettier одразу з самого старту (eslint-config-expo)
 - Без бекенду на старті — слово дня визначається локально за формулою від дати
