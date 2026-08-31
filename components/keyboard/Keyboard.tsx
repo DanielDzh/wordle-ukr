@@ -12,9 +12,10 @@ const ROWS = [
 type KeyboardProps = {
   onKeyPress: (key: string) => void;
   letterStates?: Record<string, LetterState>;
+  disabled?: boolean;
 };
 
-export function Keyboard({ onKeyPress, letterStates = {} }: KeyboardProps) {
+export function Keyboard({ onKeyPress, letterStates = {}, disabled = false }: KeyboardProps) {
   return (
     <View className={keyboardStyles.container}>
       {ROWS.map((row, rowIndex) => (
@@ -26,6 +27,7 @@ export function Keyboard({ onKeyPress, letterStates = {} }: KeyboardProps) {
               onPress={() => onKeyPress(label)}
               wide={label === 'DELETE'}
               state={letterStates[label]}
+              disabled={disabled}
             />
           ))}
         </View>

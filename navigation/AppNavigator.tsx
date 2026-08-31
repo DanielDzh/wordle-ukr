@@ -1,6 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable, Text } from 'react-native';
 import { GameScreen } from '../screens/game/GameScreen';
 import { OnboardingScreen } from '../screens/onboarding/OnboardingScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
@@ -29,19 +28,8 @@ export function AppNavigator() {
           component={OnboardingScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="Game"
-          component={GameScreen}
-          options={({ navigation }) => ({
-            title: 'Wordle UA',
-            headerRight: () => (
-              <Pressable onPress={() => navigation.navigate('Settings')}>
-                <Text className="text-xl">⚙️</Text>
-              </Pressable>
-            ),
-          })}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Налаштування' }} />
+        <Stack.Screen name="Game" component={GameScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

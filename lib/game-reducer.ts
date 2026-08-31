@@ -1,11 +1,18 @@
+import { VALID_WORDS } from '../data/valid-words';
 import { compareWord } from './word-comparison';
 import type { GameAction, GameState } from '../types/game';
 
 const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
+export const MAX_HINTS = 2;
+const VALID_WORD_SET = new Set(VALID_WORDS);
+
+export function isValidWord(word: string): boolean {
+  return VALID_WORD_SET.has(word.toLowerCase());
+}
 
 export function createInitialGameState(answer: string): GameState {
-  return { status: 'playing', answer, currentGuess: '', guesses: [] };
+  return { status: 'playing', answer, currentGuess: '', guesses: [], shakeTrigger: 0, hintsUsed: 0 };
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -17,6 +24,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     return state;
   }
 
+  if (action.type === 'HINT') {
+    // `?? 0` guards against state hydrated before hintsUsed existed — see the
+    // shakeTrigger comment below for why an unguarded undefined is dangerous.
+    const hintsUsed = state.hintsUsed ?? 0;
+    if (hintsUsed >= MAX_HINTS || state.currentGuess.length >= WORD_LENGTH) {
+      return state;
+    }
+    const nextLetter = state.answer[state.currentGuess.length].toUpperCase();
+    return { ...state, currentGuess: state.currentGuess + nextLetter, hintsUsed: hintsUsed + 1 };
+  }
+
   if (action.key === 'DELETE') {
     return { ...state, currentGuess: state.currentGuess.slice(0, -1) };
   }
@@ -24,6 +42,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   if (action.key === 'ENTER') {
     if (state.currentGuess.length !== WORD_LENGTH) {
       return state;
+    }
+
+    if (!isValidWord(state.currentGuess)) {
+      // `?? 0` guards against state hydrated from AsyncStorage before this field
+      // existed — without it, `undefined + 1` is NaN, and NaN + 1 stays NaN forever
+      // (React's effect-dependency check treats NaN as equal to itself), silently
+      // breaking the shake animation for the rest of that game.
+      return { ...state, shakeTrigger: (state.shakeTrigger ?? 0) + 1 };
     }
 
     const letters = state.currentGuess.split('');

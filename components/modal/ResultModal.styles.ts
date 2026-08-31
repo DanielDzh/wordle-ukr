@@ -1,6 +1,7 @@
 export const resultModalStyles = {
   backdrop: 'flex-1 items-center justify-center bg-black/50',
-  card: 'w-11/12 max-w-sm rounded-lg bg-white dark:bg-gray-800 p-6',
+  card: 'w-11/12 max-w-sm rounded-2xl bg-white dark:bg-gray-800 p-6',
+  closeButton: 'absolute right-4 top-4 z-10',
   headline: 'text-2xl font-bold text-center mb-4 text-black dark:text-white',
   statsRow: 'flex-row justify-between mb-4',
   statItem: 'items-center',
@@ -9,8 +10,10 @@ export const resultModalStyles = {
   distribution: 'mb-4',
   distributionRow: 'flex-row items-center mb-1',
   distributionLabel: 'w-4 text-xs text-black dark:text-white',
-  distributionBar: 'bg-green-600 justify-end px-1 min-h-[18px]',
+  distributionBar: 'bg-green-600 rounded-md justify-end px-1 min-h-[18px]',
   distributionCount: 'text-white text-xs font-semibold',
-  shareButton: 'bg-green-600 rounded py-3 items-center',
+  practiceButton: 'bg-amber-500 rounded-xl py-3 items-center mb-2',
+  practiceButtonText: 'text-white font-bold',
+  shareButton: 'bg-green-600 rounded-xl py-3 items-center',
   shareButtonText: 'text-white font-bold',
 };

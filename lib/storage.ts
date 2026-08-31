@@ -34,6 +34,17 @@ export async function markOnboardingSeen(): Promise<void> {
   await AsyncStorage.setItem(ONBOARDING_SEEN_KEY, 'true');
 }
 
+const PRACTICE_RECORD_KEY = 'wordle-ukr:practice-record';
+
+export async function loadPracticeRecord(): Promise<number> {
+  const raw = await AsyncStorage.getItem(PRACTICE_RECORD_KEY);
+  return raw ? Number(raw) : 0;
+}
+
+export async function savePracticeRecord(record: number): Promise<void> {
+  await AsyncStorage.setItem(PRACTICE_RECORD_KEY, String(record));
+}
+
 const THEME_PREFERENCE_KEY = 'wordle-ukr:theme-preference';
 
 export async function loadThemePreference(): Promise<ThemePreference | null> {

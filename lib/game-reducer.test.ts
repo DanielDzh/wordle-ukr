@@ -1,4 +1,15 @@
-import { createInitialGameState, gameReducer } from './game-reducer';
+import { createInitialGameState, gameReducer, isValidWord, MAX_HINTS } from './game-reducer';
+
+describe('isValidWord', () => {
+  it('returns true for a word in the dictionary, case-insensitively', () => {
+    expect(isValidWord('ЗЕБРА')).toBe(true);
+    expect(isValidWord('зебра')).toBe(true);
+  });
+
+  it('returns false for a nonsense letter combination', () => {
+    expect(isValidWord('ХХХХХ')).toBe(false);
+  });
+});
 
 describe('gameReducer', () => {
   it('appends a typed letter to currentGuess', () => {
@@ -30,6 +41,34 @@ describe('gameReducer', () => {
     state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
     expect(state.currentGuess).toBe('З');
     expect(state.guesses).toHaveLength(0);
+  });
+
+  it('does nothing on ENTER when the guess is not a real word', () => {
+    let state = createInitialGameState('зебра');
+    'ХХХХХ'.split('').forEach((letter) => {
+      state = gameReducer(state, { type: 'KEY_PRESS', key: letter });
+    });
+    state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+    expect(state.currentGuess).toBe('ХХХХХ');
+    expect(state.guesses).toHaveLength(0);
+  });
+
+  it('increments shakeTrigger by 1 each time, even from state hydrated before shakeTrigger existed', () => {
+    // Simulates a daily-game state persisted by an older app version, before the
+    // shakeTrigger field was added — AsyncStorage will happily return this shape.
+    const legacyState = {
+      ...createInitialGameState('зебра'),
+      shakeTrigger: undefined as unknown as number,
+    };
+    let state = legacyState;
+    'ХХХХХ'.split('').forEach((letter) => {
+      state = gameReducer(state, { type: 'KEY_PRESS', key: letter });
+    });
+    state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+    expect(state.shakeTrigger).toBe(1);
+
+    state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+    expect(state.shakeTrigger).toBe(2);
   });
 
   it('marks the game won when a 5-letter guess matches the answer', () => {
@@ -66,5 +105,56 @@ describe('gameReducer', () => {
     const afterWin = state;
     state = gameReducer(state, { type: 'KEY_PRESS', key: 'А' });
     expect(state).toBe(afterWin);
+  });
+
+  describe('HINT action', () => {
+    it('reveals the next unentered letter of the answer, uppercased', () => {
+      let state = createInitialGameState('зебра');
+      state = gameReducer(state, { type: 'KEY_PRESS', key: 'З' });
+      state = gameReducer(state, { type: 'HINT' });
+      expect(state.currentGuess).toBe('ЗЕ');
+      expect(state.hintsUsed).toBe(1);
+    });
+
+    it(`allows at most ${MAX_HINTS} hints per game`, () => {
+      let state = createInitialGameState('зебра');
+      for (let i = 0; i < MAX_HINTS; i++) {
+        state = gameReducer(state, { type: 'HINT' });
+      }
+      expect(state.hintsUsed).toBe(MAX_HINTS);
+      const afterLimit = state;
+      state = gameReducer(state, { type: 'HINT' });
+      expect(state).toBe(afterLimit);
+    });
+
+    it('does nothing once currentGuess is already 5 letters', () => {
+      let state = createInitialGameState('зебра');
+      'ХХХХХ'.split('').forEach((letter) => {
+        state = gameReducer(state, { type: 'KEY_PRESS', key: letter });
+      });
+      const before = state;
+      state = gameReducer(state, { type: 'HINT' });
+      expect(state).toBe(before);
+    });
+
+    it('does nothing once the game is over', () => {
+      let state = createInitialGameState('зебра');
+      'ЗЕБРА'.split('').forEach((letter) => {
+        state = gameReducer(state, { type: 'KEY_PRESS', key: letter });
+      });
+      state = gameReducer(state, { type: 'KEY_PRESS', key: 'ENTER' });
+      const afterWin = state;
+      state = gameReducer(state, { type: 'HINT' });
+      expect(state).toBe(afterWin);
+    });
+
+    it('treats hydrated state without hintsUsed as zero used', () => {
+      const legacyState = {
+        ...createInitialGameState('зебра'),
+        hintsUsed: undefined as unknown as number,
+      };
+      const state = gameReducer(legacyState, { type: 'HINT' });
+      expect(state.hintsUsed).toBe(1);
+    });
   });
 });

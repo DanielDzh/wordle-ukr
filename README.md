@@ -40,3 +40,7 @@ yarn lint   # run ESLint
 ```
 
 See `CLAUDE.md` for project conventions (stack decisions, styling rules, git strategy) and `docs/superpowers/` for design specs and implementation plans.
+
+## Acknowledgements
+
+The accepted-guess word list (`data/valid-words.ts`) is derived from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords) (`uk_50k.txt`), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).

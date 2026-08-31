@@ -1,7 +1,8 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { WORDS } from '../data/words';
 import { getTodayWord } from '../lib/daily-word';
-import { createInitialGameState, gameReducer } from '../lib/game-reducer';
+import { createInitialGameState, gameReducer, MAX_HINTS } from '../lib/game-reducer';
+import { hapticError, hapticLight, hapticSuccess } from '../lib/haptics';
 import { mergeLetterStates } from '../lib/keyboard-letter-states';
 import { createInitialStats, updateStats } from '../lib/stats';
 import { loadDailyGame, loadStats, saveDailyGame, saveStats } from '../lib/storage';
@@ -17,6 +18,7 @@ export function useGameState() {
   const [stats, setStats] = useState<Stats>(createInitialStats());
   const [hydrated, setHydrated] = useState(false);
   const [statsRecorded, setStatsRecorded] = useState(false);
+  const prevShakeTrigger = useRef(state.shakeTrigger);
 
   useEffect(() => {
     let cancelled = false;
@@ -42,12 +44,24 @@ export function useGameState() {
   }, [state, hydrated, today]);
 
   useEffect(() => {
+    if (state.shakeTrigger !== prevShakeTrigger.current) {
+      hapticLight();
+      prevShakeTrigger.current = state.shakeTrigger;
+    }
+  }, [state.shakeTrigger]);
+
+  useEffect(() => {
     if (state.status === 'playing' || statsRecorded) return;
     const won = state.status === 'won';
     const next = updateStats(stats, won, state.guesses.length);
     setStats(next);
     saveStats(next);
     setStatsRecorded(true);
+    if (won) {
+      hapticSuccess();
+    } else {
+      hapticError();
+    }
     // stats is intentionally omitted from deps: this effect must run exactly once per
     // status transition away from 'playing', not re-run when setStats updates `stats`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,6 +71,9 @@ export function useGameState() {
     state,
     stats,
     letterStates: mergeLetterStates(state.guesses),
+    shakeTrigger: state.shakeTrigger,
+    hintsRemaining: MAX_HINTS - (state.hintsUsed ?? 0),
     handleKeyPress: (key: string) => dispatch({ type: 'KEY_PRESS', key }),
+    handleHint: () => dispatch({ type: 'HINT' }),
   };
 }

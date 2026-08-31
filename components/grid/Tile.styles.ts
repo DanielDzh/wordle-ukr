@@ -1,5 +1,5 @@
 export const tileStyles = {
-  base: 'w-14 h-14 border-2 border-gray-400 dark:border-gray-600 items-center justify-center',
+  base: 'w-14 h-14 rounded-lg border-2 border-gray-400 dark:border-gray-600 items-center justify-center',
   textBase: 'text-2xl font-bold',
   states: {
     correct: { bg: 'bg-green-600 border-green-600', text: 'text-white' },

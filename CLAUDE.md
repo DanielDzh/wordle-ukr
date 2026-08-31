@@ -38,9 +38,15 @@ Each component has a sibling file with its classes (e.g. an object of className 
 
 `render()` from `@testing-library/react-native` v14 is an async function (the new concurrent test renderer). Always `await render(...)` in tests, otherwise `screen.getByText` etc. throw `` `render` function has not been called ``. `renderHook()` is async too, for the same reason — always `await renderHook(...)`. When `fireEvent.press(...)` triggers a `setState` whose result the next assertion depends on, wrap it in `await act(async () => { fireEvent.press(...) })` — a bare `fireEvent.press` doesn't reliably flush the update first in this concurrent renderer.
 
+## Persisted game state (AsyncStorage schema drift)
+
+`GameState` is serialized as-is into AsyncStorage (`saveDailyGame`) and restored via a `HYDRATE` action that trusts the stored shape completely. Adding a new required field to `GameState` (like `shakeTrigger`) means any state saved by an older build won't have it — `HYDRATE` will happily set `state.shakeTrigger` to `undefined`. Doing arithmetic on that (`undefined + 1` → `NaN`) is especially dangerous: `NaN + 1` stays `NaN` forever, and React's effect-dependency check treats `NaN` as equal to itself (`Object.is(NaN, NaN)` is `true`), so an effect watching that field silently stops firing for the rest of that game — no crash, no error, just a feature that quietly stops working. When incrementing a persisted numeric field in the reducer, guard with `?? 0` (or otherwise validate/backfill on hydration) rather than assuming the stored shape matches the current `GameState` type.
+
 ## Word list
 
-Week 1: a small starter list of 5-letter Ukrainian words (~50-100 words), hand-picked, for the prototype. The full dictionary comes later.
+- `data/words.ts` — the daily-answer pool (Week 1's small hand-picked list, ~33 words)
+- `data/valid-words.ts` — the accepted-guess dictionary (318 words). Sourced from [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords) (`uk_50k.txt`, CC BY-SA 4.0), filtered to 5-letter words, cross-checked against the Russian frequency list from the same corpus to drop likely contamination, then manually spot-checked. Attribution is required by the license — see the comment at the top of the file. This is a starting set, not exhaustive; expand it as real gameplay surfaces missing common words.
+- `game-reducer.ts` rejects ENTER (as a no-op, same as a too-short guess) when the typed word isn't in `VALID_WORDS` — every daily answer is included in that set so it's always accepted as a guess.
 
 ## Overall plan (4 weeks)
 
