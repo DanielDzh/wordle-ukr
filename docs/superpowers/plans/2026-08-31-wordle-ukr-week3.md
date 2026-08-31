@@ -273,7 +273,18 @@ git commit -m "feat: add useOnboardingGate hook"
 - Consumes: `loadThemePreference`, `saveThemePreference` (Task 1), `useColorScheme` from `nativewind`
 - Produces: `useThemePreference(): { preference: ThemePreference; setPreference: (next: ThemePreference) => void }` — used by Task 5 (`SettingsScreen`)
 
-- [ ] **Step 1: Write the first test**
+- [ ] **Step 1: Enable manual dark mode in Tailwind**
+
+NativeWind's `setColorScheme` throws unless Tailwind is configured for manual (class-based) dark mode — by default it's `'media'` (system-only, no manual override possible). Add to `tailwind.config.js`:
+
+```js
+module.exports = {
+  darkMode: 'class',
+  // ...rest unchanged
+};
+```
+
+- [ ] **Step 2: Write the first test**
 
 Create `hooks/useThemePreference.test.ts`:
 
@@ -281,6 +292,15 @@ Create `hooks/useThemePreference.test.ts`:
 import { renderHook, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemePreference } from './useThemePreference';
+
+// NativeWind's setColorScheme requires darkMode:'class' to have been compiled into
+// global.css by Metro — that pipeline doesn't run under Jest, so calling the real
+// setColorScheme here throws. This hook's job is to bridge storage <-> NativeWind's
+// API, not to re-verify NativeWind's own dark-mode rendering (that's covered by
+// manual testing on the simulator in Task 8), so the module is mocked.
+jest.mock('nativewind', () => ({
+  useColorScheme: () => ({ setColorScheme: jest.fn(), colorScheme: 'light' }),
+}));
 
 describe('useThemePreference', () => {
   afterEach(async () => {
@@ -294,7 +314,7 @@ describe('useThemePreference', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test, confirm it fails**
+- [ ] **Step 3: Run the test, confirm it fails**
 
 ```bash
 yarn test useThemePreference
@@ -302,7 +322,7 @@ yarn test useThemePreference
 
 Expected: FAIL — `Cannot find module './useThemePreference'`.
 
-- [ ] **Step 3: Implementation**
+- [ ] **Step 4: Implementation**
 
 Create `hooks/useThemePreference.ts`:
 
@@ -343,7 +363,7 @@ export function useThemePreference() {
 }
 ```
 
-- [ ] **Step 4: Run the test, confirm it passes**
+- [ ] **Step 5: Run the test, confirm it passes**
 
 ```bash
 yarn test useThemePreference
@@ -351,7 +371,7 @@ yarn test useThemePreference
 
 Expected: PASS.
 
-- [ ] **Step 5: Add tests for loading a saved preference and for persisting a new one**
+- [ ] **Step 6: Add tests for loading a saved preference and for persisting a new one**
 
 Add to `hooks/useThemePreference.test.ts`:
 
@@ -378,7 +398,7 @@ import { loadThemePreference, saveThemePreference } from '../lib/storage';
   });
 ```
 
-- [ ] **Step 6: Run all tests, confirm they pass**
+- [ ] **Step 7: Run all tests, confirm they pass**
 
 ```bash
 yarn test useThemePreference
@@ -386,7 +406,7 @@ yarn test useThemePreference
 
 Expected: PASS, 3 tests.
 
-- [ ] **Step 7: Check the TypeScript build and commit**
+- [ ] **Step 8: Check the TypeScript build and commit**
 
 ```bash
 npx tsc --noEmit
