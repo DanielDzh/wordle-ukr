@@ -1064,7 +1064,19 @@ export function Tile({ letter, state, revealDelay = 0 }: TileProps) {
 yarn test Tile
 ```
 
-Expected: PASS — mounting with a non-`'empty'` state never enters the animated branch (`prevState.current` starts equal to `state`), so the tile renders immediately, same as before.
+Expected at this point: FAIL — importing `react-native-reanimated` (which pulls in `react-native-worklets`) crashes under Jest, because it resolves the `.native.ts` implementation, which expects a real native binary that doesn't exist in the test environment.
+
+Fix it by pointing Jest at `react-native-worklets`' own resolver, which forces the non-native (web) implementation during tests. Add to `package.json`:
+
+```json
+{
+  "jest": {
+    "resolver": "react-native-worklets/jest/resolver.js"
+  }
+}
+```
+
+Run `yarn test Tile` again — Expected: PASS. Also run `yarn test` (the full suite) to confirm this resolver change doesn't break anything else — mounting with a non-`'empty'` state never enters the animated branch (`prevState.current` starts equal to `state`), so the tile renders immediately, same as before.
 
 - [ ] **Step 4: Wire `revealDelay` from Grid**
 

@@ -27,7 +27,12 @@ export function Grid({ guesses }: GridProps) {
       {rows.map((row, rowIndex) => (
         <View key={rowIndex} className={gridStyles.row}>
           {row.letters.map((letter, colIndex) => (
-            <Tile key={colIndex} letter={letter} state={row.states[colIndex]} />
+            <Tile
+              key={colIndex}
+              letter={letter}
+              state={row.states[colIndex]}
+              revealDelay={colIndex * 150}
+            />
           ))}
         </View>
       ))}
