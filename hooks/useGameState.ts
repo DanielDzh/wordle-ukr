@@ -34,6 +34,14 @@ export function useGameState() {
       if (savedStats) setStats(savedStats);
       if (savedGame && savedGame.date === todayKey(today)) {
         prevShakeTrigger.current = savedGame.state.shakeTrigger ?? 0;
+        // A game that was already won/lost before this launch already had its
+        // result recorded in stats back when it actually finished — without
+        // this, the stats-recording effect below would count it again on
+        // every single app open (or any remount), inflating gamesPlayed and
+        // streak indefinitely.
+        if (savedGame.state.status !== 'playing') {
+          setStatsRecorded(true);
+        }
         dispatch({ type: 'HYDRATE', state: savedGame.state });
       }
       setHydrated(true);
