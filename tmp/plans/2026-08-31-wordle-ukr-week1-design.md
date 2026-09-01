@@ -1,26 +1,26 @@
-# Wordle UA — Тиждень 1: Setup проєкту та базовий UI сітки
+# Wordle UA — Week 1: Project setup and basic grid UI
 
-## Мета проєкту
+## Project goal
 
-Wordle українською мовою — реальний продукт, який планується випустити в App Store та Google Play. Головна мета для власника проєкту — навчальна: пройти повне флоу від нуля до деплою в обидва стори, з ментором (Claude Code), який пояснює рішення на кожному кроці, а не просто пише код.
+Wordle in Ukrainian — a real product, planned for release on the App Store and Google Play. The owner's main goal is to learn: go through the full flow from zero to shipping on both stores, with decisions explained at every step rather than just implemented.
 
-Загальний план — 4 тижні (Setup → Ігрова логіка → Полірування → Реліз). Цей документ описує тільки Тиждень 1.
+Overall plan — 4 weeks (Setup → Game logic → Polish → Release). This document covers Week 1 only.
 
-## Мета Тижня 1
+## Week 1 goal
 
-Закласти фундамент: налаштований Expo-проєкт з навігацією, статичний UI сітки 6×5 та клавіатури, і протестовану (TDD) логіку порівняння слова — без ігрового стану, анімацій чи збереження прогресу (це Тиждень 2).
+Lay the foundation: a configured Expo project with navigation, a static UI for the 6×5 grid and keyboard, and tested (TDD) word comparison logic — no game state, animations, or progress saving yet (that's Week 2).
 
-## Стек
+## Stack
 
 - Expo + TypeScript
 - Package manager: yarn
-- Навігація: React Navigation (NativeStack) — свідомий вибір замість Expo Router, щоб зрозуміти навігацію без файлової абстракції
-- Стилі: NativeWind (Tailwind для RN); усі стилі виносяться в окремі `*.styles.ts` файли поруч з компонентом, не inline `className` в JSX
-- Тестування: Jest + React Native Testing Library (jest-expo preset), TDD з самого початку
-- Лінтинг: ESLint (eslint-config-expo) + Prettier одразу зі старту
-- Без бекенду — слово дня рахуватиметься локально від дати (Тиждень 2)
+- Navigation: React Navigation (NativeStack) — a deliberate choice over Expo Router, to understand navigation without the file-based abstraction
+- Styles: NativeWind (Tailwind for RN); all styles go into separate `*.styles.ts` files next to the component, no inline `className` in JSX
+- Testing: Jest + React Native Testing Library (jest-expo preset), TDD from the start
+- Linting: ESLint (eslint-config-expo) + Prettier from day one
+- No backend — the daily word is computed locally from the date (Week 2)
 
-## Структура проєкту
+## Project structure
 
 ```
 wordle-ukr/
@@ -54,9 +54,9 @@ wordle-ukr/
 └── CLAUDE.md
 ```
 
-Іменування: PascalCase для файлів компонентів, kebab-case для решти (lib, data, types).
+Naming: PascalCase for component files, kebab-case for everything else (lib, data, types).
 
-## Логіка порівняння слова (`lib/word-comparison.ts`)
+## Word comparison logic (`lib/word-comparison.ts`)
 
 ```ts
 type LetterState = 'correct' | 'present' | 'absent';
@@ -64,28 +64,28 @@ type LetterState = 'correct' | 'present' | 'absent';
 function compareWord(guess: string, answer: string): LetterState[]
 ```
 
-Ключовий нюанс — коректна обробка повторюваних літер: спочатку прохід по позиціях для `correct`, потім прохід для `present` з підрахунком залишку літер у відповіді (frequency map), щоб не позначати як `present` більше входжень літери, ніж реально лишилось у слові після врахування `correct`.
+Key nuance — correctly handling repeated letters: first pass over positions for `correct`, then a second pass for `present` that counts remaining letters in the answer (a frequency map), so a letter isn't marked `present` more times than it actually remains in the answer after accounting for `correct` matches.
 
-## Порядок реалізації (TDD)
+## Implementation order (TDD)
 
-1. `lib/word-comparison.ts` + `.test.ts` — тести спочатку: прості кейси (усі correct, усі absent) → кейс з дублікатами літер, що показує проблему наївної реалізації → реалізація, що проходить усі тести
-2. `types/game.ts` — `LetterState`, `GuessResult` та інші типи, потрібні для Тижня 1
-3. `data/words.ts` — стартовий список ~50-100 українських 5-літерних слів (генерується для прототипу, повний словник — пізніше)
-4. `components/grid/Tile.tsx` → `components/grid/Grid.tsx` — статична сітка 6×5, зі smoke-тестами на рендер
-5. `components/keyboard/Key.tsx` → `components/keyboard/Keyboard.tsx` — статичний UI, без обробки натискань (логіка вводу — Тиждень 2)
-6. `screens/game/GameScreen.tsx` + `navigation/AppNavigator.tsx` — збирає все докупи в один екран
+1. `lib/word-comparison.ts` + `.test.ts` — tests first: simple cases (all correct, all absent) → the duplicate-letters case that exposes the naive implementation's bug → an implementation that passes all tests
+2. `types/game.ts` — `LetterState`, `GuessResult`, and other types needed for Week 1
+3. `data/words.ts` — a starter list of ~50-100 Ukrainian 5-letter words (hand-picked for the prototype, full dictionary later)
+4. `components/grid/Tile.tsx` → `components/grid/Grid.tsx` — a static 6×5 grid, with render smoke tests
+5. `components/keyboard/Key.tsx` → `components/keyboard/Keyboard.tsx` — static UI, no key-press handling yet (input logic is Week 2)
+6. `screens/game/GameScreen.tsx` + `navigation/AppNavigator.tsx` — assembles everything into one screen
 
-## Поза межами Тижня 1
+## Out of scope for Week 1
 
-- Ігровий стан (поточна спроба, історія спроб)
-- Обробка натискань клавіатури
-- Анімація перевороту плиток
-- Слово дня за датою, AsyncStorage, статистика
-- Онбординг, темна тема, "Поділитись результатом"
-- Будь-яка підготовка до релізу (EAS Build, стори)
+- Game state (current guess, guess history)
+- Keyboard press handling
+- Tile-flip animation
+- Date-based daily word, AsyncStorage, stats
+- Onboarding, dark theme, "Share result"
+- Any release prep (EAS Build, store listings)
 
-## Критерії готовності Тижня 1
+## Week 1 done criteria
 
-- `yarn test` проходить — тести на `word-comparison.ts` (включно з кейсом дублікатів літер) та smoke-тести на `Grid`/`Tile`
-- `yarn lint` без помилок
-- Проєкт запускається в Expo Go / симуляторі, показує статичну сітку 6×5 та клавіатуру на екрані
+- `yarn test` passes — tests for `word-comparison.ts` (including the duplicate-letters case) and smoke tests for `Grid`/`Tile`
+- `yarn lint` passes with no errors
+- The project runs in Expo Go / simulator, showing a static 6×5 grid and keyboard on screen
