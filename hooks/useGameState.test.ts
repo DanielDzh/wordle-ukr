@@ -2,7 +2,8 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { EPOCH_DATE } from '../lib/daily-word';
 import { createInitialGameState } from '../lib/game-reducer';
-import { saveDailyGame } from '../lib/storage';
+import { saveDailyGame, saveStats } from '../lib/storage';
+import type { LetterState } from '../types/game';
 import { useGameState } from './useGameState';
 
 describe('useGameState', () => {
@@ -86,6 +87,34 @@ describe('useGameState', () => {
 
     expect(result.current.state.shakeTrigger).toBe(1);
     expect(result.current.shakeTrigger).toBe(0);
+  });
+
+  it('does not double-count stats when mounting against an already-finished game', async () => {
+    const wonState = {
+      ...createInitialGameState('зебра'),
+      status: 'won' as const,
+      guesses: [
+        {
+          letters: ['З', 'Е', 'Б', 'Р', 'А'],
+          states: ['correct', 'correct', 'correct', 'correct', 'correct'] as LetterState[],
+        },
+      ],
+    };
+    await saveDailyGame('2026-8-31', wonState);
+    const savedStats = {
+      gamesPlayed: 1,
+      gamesWon: 1,
+      currentStreak: 1,
+      maxStreak: 1,
+      guessDistribution: [0, 0, 0, 0, 1, 0] as [number, number, number, number, number, number],
+    };
+    await saveStats(savedStats);
+
+    // Reopening the app (or re-navigating to the Game screen) remounts this hook
+    // fresh; without the fix, it would count this already-finished game again.
+    const { result } = await renderHook(() => useGameState());
+    await waitFor(() => expect(result.current.state.status).toBe('won'));
+    expect(result.current.stats).toEqual(savedStats);
   });
 
   it('reveals a letter and decrements hintsRemaining when handleHint is called', async () => {
