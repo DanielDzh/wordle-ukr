@@ -3,7 +3,7 @@ import { useColorScheme } from 'nativewind';
 import { loadThemePreference, saveThemePreference } from '../lib/storage';
 import type { ThemePreference } from '../types/theme';
 
-export function useThemePreference() {
+export const useThemePreference = () => {
   const { setColorScheme } = useColorScheme();
   const [preference, setPreferenceState] = useState<ThemePreference>('system');
 
@@ -31,4 +31,4 @@ export function useThemePreference() {
   };
 
   return { preference, setPreference };
-}
+};

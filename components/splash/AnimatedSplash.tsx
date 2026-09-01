@@ -13,7 +13,7 @@ const TILES: { letter: string; color: 'green' | 'yellow' | 'gray' }[] = [
 
 const STAGGER_MS = 250;
 
-export function AnimatedSplash() {
+export const AnimatedSplash = () => {
   return (
     <View className={animatedSplashStyles.container}>
       <View className={animatedSplashStyles.row}>
@@ -23,4 +23,4 @@ export function AnimatedSplash() {
       </View>
     </View>
   );
-}
+};

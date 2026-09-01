@@ -10,7 +10,7 @@ type ActionBarProps = {
   disabled?: boolean;
 };
 
-export function ActionBar({ onEnter, onHint, hintsRemaining, disabled = false }: ActionBarProps) {
+export const ActionBar = ({ onEnter, onHint, hintsRemaining, disabled = false }: ActionBarProps) => {
   const hintDisabled = disabled || hintsRemaining <= 0;
 
   const handleEnter = () => {
@@ -45,4 +45,4 @@ export function ActionBar({ onEnter, onHint, hintsRemaining, disabled = false }:
       </Pressable>
     </View>
   );
-}
+};

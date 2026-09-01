@@ -5,53 +5,53 @@ import type { ThemePreference } from '../types/theme';
 const STATS_KEY = 'wordle-ukr:stats';
 const DAILY_GAME_KEY = 'wordle-ukr:daily-game';
 
-export async function loadStats(): Promise<Stats | null> {
+export const loadStats = async (): Promise<Stats | null> => {
   const raw = await AsyncStorage.getItem(STATS_KEY);
   return raw ? (JSON.parse(raw) as Stats) : null;
-}
+};
 
-export async function saveStats(stats: Stats): Promise<void> {
+export const saveStats = async (stats: Stats): Promise<void> => {
   await AsyncStorage.setItem(STATS_KEY, JSON.stringify(stats));
-}
+};
 
-export async function loadDailyGame(): Promise<{ date: string; state: GameState } | null> {
+export const loadDailyGame = async (): Promise<{ date: string; state: GameState } | null> => {
   const raw = await AsyncStorage.getItem(DAILY_GAME_KEY);
   return raw ? (JSON.parse(raw) as { date: string; state: GameState }) : null;
-}
+};
 
-export async function saveDailyGame(date: string, state: GameState): Promise<void> {
+export const saveDailyGame = async (date: string, state: GameState): Promise<void> => {
   await AsyncStorage.setItem(DAILY_GAME_KEY, JSON.stringify({ date, state }));
-}
+};
 
 const ONBOARDING_SEEN_KEY = 'wordle-ukr:onboarding-seen';
 
-export async function loadOnboardingSeen(): Promise<boolean> {
+export const loadOnboardingSeen = async (): Promise<boolean> => {
   const raw = await AsyncStorage.getItem(ONBOARDING_SEEN_KEY);
   return raw === 'true';
-}
+};
 
-export async function markOnboardingSeen(): Promise<void> {
+export const markOnboardingSeen = async (): Promise<void> => {
   await AsyncStorage.setItem(ONBOARDING_SEEN_KEY, 'true');
-}
+};
 
 const PRACTICE_RECORD_KEY = 'wordle-ukr:practice-record';
 
-export async function loadPracticeRecord(): Promise<number> {
+export const loadPracticeRecord = async (): Promise<number> => {
   const raw = await AsyncStorage.getItem(PRACTICE_RECORD_KEY);
   return raw ? Number(raw) : 0;
-}
+};
 
-export async function savePracticeRecord(record: number): Promise<void> {
+export const savePracticeRecord = async (record: number): Promise<void> => {
   await AsyncStorage.setItem(PRACTICE_RECORD_KEY, String(record));
-}
+};
 
 const THEME_PREFERENCE_KEY = 'wordle-ukr:theme-preference';
 
-export async function loadThemePreference(): Promise<ThemePreference | null> {
+export const loadThemePreference = async (): Promise<ThemePreference | null> => {
   const raw = await AsyncStorage.getItem(THEME_PREFERENCE_KEY);
   return raw === 'light' || raw === 'dark' || raw === 'system' ? raw : null;
-}
+};
 
-export async function saveThemePreference(preference: ThemePreference): Promise<void> {
+export const saveThemePreference = async (preference: ThemePreference): Promise<void> => {
   await AsyncStorage.setItem(THEME_PREFERENCE_KEY, preference);
-}
+};

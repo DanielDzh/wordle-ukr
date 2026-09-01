@@ -7,15 +7,15 @@ const MAX_GUESSES = 6;
 export const MAX_HINTS = 2;
 const VALID_WORD_SET = new Set(VALID_WORDS);
 
-export function isValidWord(word: string): boolean {
+export const isValidWord = (word: string): boolean => {
   return VALID_WORD_SET.has(word.toLowerCase());
-}
+};
 
-export function createInitialGameState(answer: string): GameState {
+export const createInitialGameState = (answer: string): GameState => {
   return { status: 'playing', answer, currentGuess: '', guesses: [], shakeTrigger: 0, hintsUsed: 0 };
-}
+};
 
-export function gameReducer(state: GameState, action: GameAction): GameState {
+export const gameReducer = (state: GameState, action: GameAction): GameState => {
   if (action.type === 'HYDRATE') {
     return action.state;
   }
@@ -71,4 +71,4 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   }
 
   return { ...state, currentGuess: state.currentGuess + action.key };
-}
+};

@@ -13,7 +13,7 @@ type PracticeGameViewProps = {
   onExitPractice: () => void;
 };
 
-export function PracticeGameView({ onExitPractice }: PracticeGameViewProps) {
+export const PracticeGameView = ({ onExitPractice }: PracticeGameViewProps) => {
   const { state, streak, record, letterStates, shakeTrigger, hintsRemaining, handleKeyPress, handleHint, handleRetry } =
     usePracticeState();
   const isLost = state.status === 'lost';
@@ -35,6 +35,7 @@ export function PracticeGameView({ onExitPractice }: PracticeGameViewProps) {
   }, [isLost, state.answer]);
 
   const retryReady = isLost && revealedForWord === state.answer;
+  const handleEnter = () => handleKeyPress('ENTER');
 
   return (
     <View className={practiceScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
@@ -49,7 +50,7 @@ export function PracticeGameView({ onExitPractice }: PracticeGameViewProps) {
       <View className={practiceScreenStyles.controls}>
         <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} disabled={isLost} />
         <ActionBar
-          onEnter={() => handleKeyPress('ENTER')}
+          onEnter={handleEnter}
           onHint={handleHint}
           hintsRemaining={hintsRemaining}
           disabled={isLost}
@@ -59,13 +60,13 @@ export function PracticeGameView({ onExitPractice }: PracticeGameViewProps) {
       <PracticeRetryModal visible={retryReady} streak={streak} record={record} onRetry={handleRetry} />
     </View>
   );
-}
+};
 
-function ScoreItem({ label, value }: { label: string; value: number }) {
+const ScoreItem = ({ label, value }: { label: string; value: number }) => {
   return (
     <View className={practiceScreenStyles.scoreItem}>
       <Text className={practiceScreenStyles.scoreValue}>{value}</Text>
       <Text className={practiceScreenStyles.scoreLabel}>{label}</Text>
     </View>
   );
-}
+};

@@ -12,7 +12,7 @@ type ResultModalProps = {
   onPractice: () => void;
 };
 
-export function ResultModal({ visible, won, stats, onShare, onClose, onPractice }: ResultModalProps) {
+export const ResultModal = ({ visible, won, stats, onShare, onClose, onPractice }: ResultModalProps) => {
   const winPercent = stats.gamesPlayed === 0 ? 0 : Math.round((stats.gamesWon / stats.gamesPlayed) * 100);
   const maxCount = Math.max(...stats.guessDistribution, 1);
 
@@ -63,13 +63,13 @@ export function ResultModal({ visible, won, stats, onShare, onClose, onPractice 
       </View>
     </Modal>
   );
-}
+};
 
-function StatItem({ label, value }: { label: string; value: number }) {
+const StatItem = ({ label, value }: { label: string; value: number }) => {
   return (
     <View className={resultModalStyles.statItem}>
       <Text className={resultModalStyles.statValue}>{value}</Text>
       <Text className={resultModalStyles.statLabel}>{label}</Text>
     </View>
   );
-}
+};

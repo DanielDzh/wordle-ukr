@@ -1,6 +1,6 @@
 import type { GuessResult, LetterState } from '../types/game';
 
-export function compareWord(guess: string, answer: string): GuessResult {
+export const compareWord = (guess: string, answer: string): GuessResult => {
   const guessLetters = guess.split('');
   const answerLetters = answer.split('');
   const result: LetterState[] = new Array(guessLetters.length).fill('absent');
@@ -24,4 +24,4 @@ export function compareWord(guess: string, answer: string): GuessResult {
   });
 
   return result;
-}
+};

@@ -10,7 +10,7 @@ import { loadPracticeRecord, savePracticeRecord } from '../lib/storage';
 // to finish before the next word silently takes over the board.
 export const AUTO_ADVANCE_DELAY_MS = 1500;
 
-export function usePracticeState() {
+export const usePracticeState = () => {
   const [word, setWord] = useState(() => pickRandomWord(WORDS, undefined));
   const [state, dispatch] = useReducer(gameReducer, word, createInitialGameState);
   const [streak, setStreak] = useState(0);
@@ -72,4 +72,4 @@ export function usePracticeState() {
     handleHint: () => dispatch({ type: 'HINT' }),
     handleRetry,
   };
-}
+};

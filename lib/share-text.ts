@@ -6,12 +6,12 @@ const EMOJI: Record<LetterState, string> = {
   absent: '⬛',
 };
 
-export function buildShareText(
+export const buildShareText = (
   guesses: { states: LetterState[] }[],
   dayIndex: number,
   won: boolean,
-): string {
+): string => {
   const header = `Wordle UA #${dayIndex} ${won ? guesses.length : 'X'}/6`;
   const grid = guesses.map((guess) => guess.states.map((state) => EMOJI[state]).join('')).join('\n');
   return `${header}\n\n${grid}`;
-}
+};
