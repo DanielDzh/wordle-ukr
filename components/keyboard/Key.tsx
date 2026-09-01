@@ -5,18 +5,18 @@ import { keyStyles } from './Key.styles';
 
 type KeyProps = {
   label: string;
-  onPress: () => void;
+  onPress: (label: string) => void;
   wide?: boolean;
   state?: LetterState;
   disabled?: boolean;
 };
 
-export function Key({ label, onPress, wide = false, state, disabled = false }: KeyProps) {
+export const Key = ({ label, onPress, wide = false, state, disabled = false }: KeyProps) => {
   const colors = state ? keyStyles.states[state] : keyStyles.states.default;
 
   const handlePress = () => {
     hapticLight();
-    onPress();
+    onPress(label);
   };
 
   return (
@@ -28,4 +28,4 @@ export function Key({ label, onPress, wide = false, state, disabled = false }: K
       <Text className={`${keyStyles.text} ${colors.text}`}>{label}</Text>
     </Pressable>
   );
-}
+};

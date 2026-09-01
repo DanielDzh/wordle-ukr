@@ -21,7 +21,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 // imperceptible flash without an artificial minimum.
 const MIN_SPLASH_MS = 2000;
 
-export function AppNavigator() {
+export const AppNavigator = () => {
   const { loading, seen } = useOnboardingGate();
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
@@ -51,4 +51,4 @@ export function AppNavigator() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};

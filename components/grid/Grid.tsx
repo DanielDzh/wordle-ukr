@@ -32,7 +32,7 @@ type GridProps = {
   won?: boolean;
 };
 
-export function Grid({ guesses, currentGuess = '', shakeTrigger = 0, won = false }: GridProps) {
+export const Grid = ({ guesses, currentGuess = '', shakeTrigger = 0, won = false }: GridProps) => {
   const shakeX = useSharedValue(0);
 
   useEffect(() => {
@@ -91,4 +91,4 @@ export function Grid({ guesses, currentGuess = '', shakeTrigger = 0, won = false
       ))}
     </View>
   );
-}
+};

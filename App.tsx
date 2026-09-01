@@ -9,7 +9,7 @@ import { useThemePreference } from './hooks/useThemePreference';
 // auto-hiding and that AsyncStorage check finishing.
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
-export default function App() {
+const App = () => {
   // Applies the saved theme preference to NativeWind's global color scheme on
   // launch — without this, a saved dark/light choice only took effect once
   // the user opened Settings, since that screen was the only place calling
@@ -21,4 +21,6 @@ export default function App() {
       <AppNavigator />
     </SafeAreaProvider>
   );
-}
+};
+
+export default App;

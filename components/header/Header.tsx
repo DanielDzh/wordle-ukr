@@ -12,7 +12,7 @@ type HeaderProps = {
   onStatsPress?: () => void;
 };
 
-export function Header({ title, streak, onBackPress, onSettingsPress, onStatsPress }: HeaderProps) {
+export const Header = ({ title, streak, onBackPress, onSettingsPress, onStatsPress }: HeaderProps) => {
   const { colorScheme } = useColorScheme();
   const insets = useSafeAreaInsets();
   const iconColor = colorScheme === 'dark' ? '#e5e7eb' : '#374151';
@@ -42,4 +42,4 @@ export function Header({ title, streak, onBackPress, onSettingsPress, onStatsPre
       </View>
     </View>
   );
-}
+};

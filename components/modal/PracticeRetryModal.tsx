@@ -8,7 +8,7 @@ type PracticeRetryModalProps = {
   onRetry: () => void;
 };
 
-export function PracticeRetryModal({ visible, streak, record, onRetry }: PracticeRetryModalProps) {
+export const PracticeRetryModal = ({ visible, streak, record, onRetry }: PracticeRetryModalProps) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View className={practiceRetryModalStyles.backdrop}>
@@ -27,13 +27,13 @@ export function PracticeRetryModal({ visible, streak, record, onRetry }: Practic
       </View>
     </Modal>
   );
-}
+};
 
-function StatItem({ label, value }: { label: string; value: number }) {
+const StatItem = ({ label, value }: { label: string; value: number }) => {
   return (
     <View className={practiceRetryModalStyles.statItem}>
       <Text className={practiceRetryModalStyles.statValue}>{value}</Text>
       <Text className={practiceRetryModalStyles.statLabel}>{label}</Text>
     </View>
   );
-}
+};

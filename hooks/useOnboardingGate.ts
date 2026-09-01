@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { loadOnboardingSeen } from '../lib/storage';
 
-export function useOnboardingGate() {
+export const useOnboardingGate = () => {
   const [loading, setLoading] = useState(true);
   const [seen, setSeen] = useState(false);
 
@@ -21,4 +21,4 @@ export function useOnboardingGate() {
   }, []);
 
   return { loading, seen };
-}
+};

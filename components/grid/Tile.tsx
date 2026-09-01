@@ -18,7 +18,7 @@ type TileProps = {
   bounceDelay?: number;
 };
 
-export function Tile({ letter, state, revealDelay = 0, bounceDelay }: TileProps) {
+export const Tile = ({ letter, state, revealDelay = 0, bounceDelay }: TileProps) => {
   const [displayState, setDisplayState] = useState(state);
   const rotation = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -62,4 +62,4 @@ export function Tile({ letter, state, revealDelay = 0, bounceDelay }: TileProps)
       <Text className={`${tileStyles.textBase} ${colors.text}`}>{letter}</Text>
     </Animated.View>
   );
-}
+};

@@ -25,7 +25,7 @@ type Props = {
   route: unknown;
 };
 
-export function OnboardingScreen({ navigation }: Props) {
+export const OnboardingScreen = ({ navigation }: Props) => {
   const [step, setStep] = useState(0);
   const isLastStep = step === STEPS.length - 1;
   const insets = useSafeAreaInsets();
@@ -72,4 +72,4 @@ export function OnboardingScreen({ navigation }: Props) {
       </View>
     </View>
   );
-}
+};

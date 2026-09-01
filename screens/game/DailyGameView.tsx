@@ -18,7 +18,7 @@ type DailyGameViewProps = {
   onStartPractice: () => void;
 };
 
-export function DailyGameView({ onStartPractice }: DailyGameViewProps) {
+export const DailyGameView = ({ onStartPractice }: DailyGameViewProps) => {
   const { state, stats, letterStates, shakeTrigger, hintsRemaining, handleKeyPress, handleHint } = useGameState();
   const isGameOver = state.status !== 'playing';
   const won = state.status === 'won';
@@ -47,19 +47,24 @@ export function DailyGameView({ onStartPractice }: DailyGameViewProps) {
     Share.share({ message });
   };
 
+  const handleOpenSettings = () => navigation.navigate('Settings');
+  const handleShowResult = () => setDismissed(false);
+  const handleEnter = () => handleKeyPress('ENTER');
+  const handleCloseResult = () => setDismissed(true);
+
   return (
     <View className={gameScreenStyles.container} style={{ paddingBottom: insets.bottom + 8 }}>
       <Header
         title="Wordle UA"
         streak={stats.currentStreak}
-        onSettingsPress={() => navigation.navigate('Settings')}
-        onStatsPress={isGameOver ? () => setDismissed(false) : undefined}
+        onSettingsPress={handleOpenSettings}
+        onStatsPress={isGameOver ? handleShowResult : undefined}
       />
       <Grid guesses={state.guesses} currentGuess={state.currentGuess} shakeTrigger={shakeTrigger} won={won} />
       <View className={gameScreenStyles.controls}>
         <Keyboard onKeyPress={handleKeyPress} letterStates={letterStates} disabled={isGameOver} />
         <ActionBar
-          onEnter={() => handleKeyPress('ENTER')}
+          onEnter={handleEnter}
           onHint={handleHint}
           hintsRemaining={hintsRemaining}
           disabled={isGameOver}
@@ -75,9 +80,9 @@ export function DailyGameView({ onStartPractice }: DailyGameViewProps) {
         won={won}
         stats={stats}
         onShare={handleShare}
-        onClose={() => setDismissed(true)}
+        onClose={handleCloseResult}
         onPractice={onStartPractice}
       />
     </View>
   );
-}
+};

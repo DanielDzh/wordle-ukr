@@ -8,11 +8,11 @@ import { createInitialStats, updateStats } from '../lib/stats';
 import { loadDailyGame, loadStats, saveDailyGame, saveStats } from '../lib/storage';
 import type { Stats } from '../types/game';
 
-function todayKey(date: Date): string {
+const todayKey = (date: Date): string => {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-}
+};
 
-export function useGameState() {
+export const useGameState = () => {
   const [today] = useState(() => new Date());
   const [state, dispatch] = useReducer(gameReducer, getTodayWord(WORDS, today), createInitialGameState);
   const [stats, setStats] = useState<Stats>(createInitialStats());
@@ -92,4 +92,4 @@ export function useGameState() {
     handleKeyPress: (key: string) => dispatch({ type: 'KEY_PRESS', key }),
     handleHint: () => dispatch({ type: 'HINT' }),
   };
-}
+};

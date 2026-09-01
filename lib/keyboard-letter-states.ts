@@ -2,7 +2,7 @@ import type { Guess, LetterState } from '../types/game';
 
 const PRIORITY: Record<LetterState, number> = { absent: 0, present: 1, correct: 2 };
 
-export function mergeLetterStates(guesses: Guess[]): Record<string, LetterState> {
+export const mergeLetterStates = (guesses: Guess[]): Record<string, LetterState> => {
   const result: Record<string, LetterState> = {};
 
   guesses.forEach((guess) => {
@@ -16,4 +16,4 @@ export function mergeLetterStates(guesses: Guess[]): Record<string, LetterState>
   });
 
   return result;
-}
+};

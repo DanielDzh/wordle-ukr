@@ -9,7 +9,7 @@ type SplashTileProps = {
   delay: number;
 };
 
-export function SplashTile({ letter, color, delay }: SplashTileProps) {
+export const SplashTile = ({ letter, color, delay }: SplashTileProps) => {
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -29,4 +29,4 @@ export function SplashTile({ letter, color, delay }: SplashTileProps) {
       <Text className={splashTileStyles.letter}>{letter}</Text>
     </Animated.View>
   );
-}
+};

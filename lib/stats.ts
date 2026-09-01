@@ -1,6 +1,6 @@
 import type { Stats } from '../types/game';
 
-export function createInitialStats(): Stats {
+export const createInitialStats = (): Stats => {
   return {
     gamesPlayed: 0,
     gamesWon: 0,
@@ -8,9 +8,9 @@ export function createInitialStats(): Stats {
     maxStreak: 0,
     guessDistribution: [0, 0, 0, 0, 0, 0],
   };
-}
+};
 
-export function updateStats(prev: Stats, won: boolean, guessCount: number): Stats {
+export const updateStats = (prev: Stats, won: boolean, guessCount: number): Stats => {
   const gamesPlayed = prev.gamesPlayed + 1;
 
   if (!won) {
@@ -28,4 +28,4 @@ export function updateStats(prev: Stats, won: boolean, guessCount: number): Stat
     maxStreak: Math.max(prev.maxStreak, currentStreak),
     guessDistribution,
   };
-}
+};
