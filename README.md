@@ -43,7 +43,8 @@ See `CLAUDE.md` for project conventions (stack decisions, styling rules, git str
 
 ## Acknowledgements
 
-The accepted-guess word list (`data/valid-words.ts`) is derived from two sources:
+The accepted-guess word list (`data/valid-words.ts`) is derived from three sources:
 
 - [hermitdave/FrequencyWords](https://github.com/hermitdave/FrequencyWords) (`uk_50k.txt`), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 - [slavkaa/ukraine_dictionary](https://github.com/slavkaa/ukraine_dictionary), licensed under the MIT License.
+- [uk.wiktionary.org](https://uk.wiktionary.org), "Категорія:Слова з 5 букв", licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
